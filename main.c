@@ -6,6 +6,8 @@ int main(int argc, char *argv[]) {
     while(--argc > 0) {
         printf("start pre-preccesing, fetching macros\n");
         as_file = fopen_with_ending(argv[argc], ".as");
+        /* trying */
+
 
         printf("starting first pass\n");
 
