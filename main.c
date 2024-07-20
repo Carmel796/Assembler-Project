@@ -4,8 +4,9 @@
 int main(int argc, char *argv[]) {
     FILE *as_file, *am_file;
     while(--argc > 0) {
+    while(--argc > 0) {
         printf("start pre-preccesing, fetching macros\n");
-        as_file = fopen_with_ending(argv[argc], ".as");
+        as_file = fopen_with_ending(*++argv, ".as", "r");
 
 
         printf("starting first pass\n");

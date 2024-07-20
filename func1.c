@@ -4,7 +4,7 @@
 #include "header.h"
 
 
-FILE *fopen_with_ending(char *source_file_name, char *ending) {
+FILE *fopen_with_ending(char *source_file_name, char *ending, char *mode) {
     size_t len1 = strlen(source_file_name), len2 = strlen(ending);
     char *result = malloc(len1 + len2 + 1);
     if(result == NULL) {
@@ -15,5 +15,5 @@ FILE *fopen_with_ending(char *source_file_name, char *ending) {
     strcpy(result, source_file_name);
     strcat(result, ending);
 
-    return fopen(result, "r");
+    return fopen(result, mode);
 }
