@@ -5,4 +5,9 @@ set(CMAKE_C_STANDARD 90)
 
 add_executable(Assembler main.c
         func1.c
-        header.h)
+        header.h
+        pre_proc.c
+        linkedlist.c
+        linkedlist.h
+        hashtable.c
+        hashtable.h)

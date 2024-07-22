@@ -1,3 +1,3 @@
-C:/Users/frnkh/Documents/Assembler-Project/cmake-build-debug/CMakeFiles/Assembler.dir
-C:/Users/frnkh/Documents/Assembler-Project/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/frnkh/Documents/Assembler-Project/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/carmel/Documents/Assembler-Project/cmake-build-debug/CMakeFiles/Assembler.dir
+/Users/carmel/Documents/Assembler-Project/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/carmel/Documents/Assembler-Project/cmake-build-debug/CMakeFiles/rebuild_cache.dir

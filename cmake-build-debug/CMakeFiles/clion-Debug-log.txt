@@ -1,4 +1,4 @@
-"C:\Program Files\JetBrains\CLion 2024.1.4\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" -S C:\Users\frnkh\Documents\Assembler-Project -B C:\Users\frnkh\Documents\Assembler-Project\cmake-build-debug
+/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" -S /Users/carmel/Documents/Assembler-Project -B /Users/carmel/Documents/Assembler-Project/cmake-build-debug
 CMake Deprecation Warning:
   Support for "Extra Generators" like
 
@@ -8,12 +8,6 @@ CMake Deprecation Warning:
   use the cmake-file-api(7) to view CMake-generated project build trees.
 
 
--- The C compiler identification is GNU 13.1.0
--- Detecting C compiler ABI info
--- Detecting C compiler ABI info - done
--- Check for working C compiler: C:/Program Files/JetBrains/CLion 2024.1.4/bin/mingw/bin/gcc.exe - skipped
--- Detecting C compile features
--- Detecting C compile features - done
--- Configuring done (2.3s)
+-- Configuring done (0.0s)
 -- Generating done (0.0s)
--- Build files have been written to: C:/Users/frnkh/Documents/Assembler-Project/cmake-build-debug
+-- Build files have been written to: /Users/carmel/Documents/Assembler-Project/cmake-build-debug
