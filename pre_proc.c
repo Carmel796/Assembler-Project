@@ -5,7 +5,7 @@
 
 #define MAXLINE 82
 
-FILE *macro_search(FILE *as_file, FILE *am_file , hash_table macros) { /* creating new .as file, every line thats not macro decleration or body - add to new file */
+FILE *macro_search(FILE *as_file, FILE *am_file , hashtable macros) { /* creating new .as file, every line thats not macro decleration or body - add to new file */
     /*
      * char line[80]
      * create new .am file - ?malloc size?
