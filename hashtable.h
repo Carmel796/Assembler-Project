@@ -2,8 +2,8 @@
 #define HASHTABLE_H
 
 #include "linkedlist.h"
-#define HASHTABLESIZE 100
+#define HASH_TABLE_SIZE 100
 
-typedef node hashtable[100];
+typedef node hashtable[HASH_TABLE_SIZE];
 
 #endif

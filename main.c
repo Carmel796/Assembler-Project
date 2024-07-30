@@ -1,14 +1,22 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "main.h"
 
-#include "header.h"
+/* TODO:
+ * implement the Hash-Table + Hash-Function
+ * functions for hash table: insert into table (index find with hash function?)
+ * in macro_handle: getting the macro name from the line + insert into hash table
+ */
+
 
 int main(int argc, char *argv[]) {
-    FILE *as_file, *am_file;
     while(--argc > 0) {
         printf("start pre-preccesing, fetching macros\n");
-        as_file = fopen_with_ending(*++argv, ".as", "r");
+
+        hashtable macros = {0};
+
         /* macro_search(FILE *as_file) - search for macro definition line-by-line, if found - adding them to the hashTable - add_to_hash(char *key, char *value) */
+        if (!macro_search(argv[argc], macros)) { /* as_file or am_file failed to open */
+            /* skip to next file */
+        }
 
         printf("starting first pass\n");
 
@@ -16,8 +24,8 @@ int main(int argc, char *argv[]) {
         printf("starting scond pass\n");
 
 
-        free(as_file);
-        free(am_file);
+        fclose(as_file);
+        fclose(am_file);
     }
 
     printf("Done\n");

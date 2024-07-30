@@ -1,11 +1,6 @@
-#include <stdio.h>
-#include <string.h>
+#include "pre_proc.h"
 
-#include "header.h"
-
-#define MAXLINE 82
-
-FILE *macro_search(FILE *as_file, FILE *am_file , hashtable macros) { /* creating new .as file, every line thats not macro decleration or body - add to new file */
+FILE *macro_search(char *file_name, hashtable macros) { /* creating new .as file, every line thats not macro decleration or body - add to new file */
     /*
      * char line[80]
      * create new .am file - ?malloc size?
@@ -14,12 +9,17 @@ FILE *macro_search(FILE *as_file, FILE *am_file , hashtable macros) { /* creatin
      * else: add line to new file
      */
 
-    char line[MAXLINE], word[MAXLINE] = {0};
+    FILE *as_file = fopen_with_ending(file_name, ".as", "r");
+    FILE *am_file = fopen_with_ending(file_name, ".am", "w");
+    char line[MAX_LINE], word[MAX_LINE] = {0};
     int offset = 0;
-    while(fgets(line, MAXLINE, as_file)) {
+    if (!as_file || !am_file) {
+        return NULL;
+    }
+    while(fgets(line, MAX_LINE, as_file)) {
         if (sscanf(line, "%s%n", word, &offset) == 1) {
             if (!strcmp(word, "macr")) {
-                handle_macro(line, offset);
+                handle_macro(line + offset);
             }
             else if (hash_search(macros, word)) {
 
@@ -31,8 +31,9 @@ FILE *macro_search(FILE *as_file, FILE *am_file , hashtable macros) { /* creatin
     }
 }
 
-void handle_macro(char *line, int offset) {
-    return;
+void handle_macro(char *line_after_macr) {
+    char macro_name[MAX_LINE];
+    sscanf(macro_name, "%s", line_after_macr);
 }
 
 void add_to_hash(char *key, char *value) {

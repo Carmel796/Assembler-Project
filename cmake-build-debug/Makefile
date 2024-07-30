@@ -129,30 +129,6 @@ Assembler/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Assembler.dir/build.make CMakeFiles/Assembler.dir/build
 .PHONY : Assembler/fast
 
-func1.o: func1.c.o
-.PHONY : func1.o
-
-# target to build an object file
-func1.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Assembler.dir/build.make CMakeFiles/Assembler.dir/func1.c.o
-.PHONY : func1.c.o
-
-func1.i: func1.c.i
-.PHONY : func1.i
-
-# target to preprocess a source file
-func1.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Assembler.dir/build.make CMakeFiles/Assembler.dir/func1.c.i
-.PHONY : func1.c.i
-
-func1.s: func1.c.s
-.PHONY : func1.s
-
-# target to generate assembly for a file
-func1.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Assembler.dir/build.make CMakeFiles/Assembler.dir/func1.c.s
-.PHONY : func1.c.s
-
 hashtable.o: hashtable.c.o
 .PHONY : hashtable.o
 
@@ -249,6 +225,30 @@ pre_proc.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Assembler.dir/build.make CMakeFiles/Assembler.dir/pre_proc.c.s
 .PHONY : pre_proc.c.s
 
+util.o: util.c.o
+.PHONY : util.o
+
+# target to build an object file
+util.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Assembler.dir/build.make CMakeFiles/Assembler.dir/util.c.o
+.PHONY : util.c.o
+
+util.i: util.c.i
+.PHONY : util.i
+
+# target to preprocess a source file
+util.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Assembler.dir/build.make CMakeFiles/Assembler.dir/util.c.i
+.PHONY : util.c.i
+
+util.s: util.c.s
+.PHONY : util.s
+
+# target to generate assembly for a file
+util.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Assembler.dir/build.make CMakeFiles/Assembler.dir/util.c.s
+.PHONY : util.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -258,9 +258,6 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... Assembler"
-	@echo "... func1.o"
-	@echo "... func1.i"
-	@echo "... func1.s"
 	@echo "... hashtable.o"
 	@echo "... hashtable.i"
 	@echo "... hashtable.s"
@@ -273,6 +270,9 @@ help:
 	@echo "... pre_proc.o"
 	@echo "... pre_proc.i"
 	@echo "... pre_proc.s"
+	@echo "... util.o"
+	@echo "... util.i"
+	@echo "... util.s"
 .PHONY : help
 
 

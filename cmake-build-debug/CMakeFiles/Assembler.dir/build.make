@@ -83,19 +83,19 @@ CMakeFiles/Assembler.dir/main.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/Assembler.dir/main.c.s"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/carmel/Documents/Assembler-Project/main.c -o CMakeFiles/Assembler.dir/main.c.s
 
-CMakeFiles/Assembler.dir/func1.c.o: CMakeFiles/Assembler.dir/flags.make
-CMakeFiles/Assembler.dir/func1.c.o: /Users/carmel/Documents/Assembler-Project/func1.c
-CMakeFiles/Assembler.dir/func1.c.o: CMakeFiles/Assembler.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/carmel/Documents/Assembler-Project/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/Assembler.dir/func1.c.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/Assembler.dir/func1.c.o -MF CMakeFiles/Assembler.dir/func1.c.o.d -o CMakeFiles/Assembler.dir/func1.c.o -c /Users/carmel/Documents/Assembler-Project/func1.c
+CMakeFiles/Assembler.dir/util.c.o: CMakeFiles/Assembler.dir/flags.make
+CMakeFiles/Assembler.dir/util.c.o: /Users/carmel/Documents/Assembler-Project/util.c
+CMakeFiles/Assembler.dir/util.c.o: CMakeFiles/Assembler.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/carmel/Documents/Assembler-Project/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/Assembler.dir/util.c.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/Assembler.dir/util.c.o -MF CMakeFiles/Assembler.dir/util.c.o.d -o CMakeFiles/Assembler.dir/util.c.o -c /Users/carmel/Documents/Assembler-Project/util.c
 
-CMakeFiles/Assembler.dir/func1.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/Assembler.dir/func1.c.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/carmel/Documents/Assembler-Project/func1.c > CMakeFiles/Assembler.dir/func1.c.i
+CMakeFiles/Assembler.dir/util.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/Assembler.dir/util.c.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/carmel/Documents/Assembler-Project/util.c > CMakeFiles/Assembler.dir/util.c.i
 
-CMakeFiles/Assembler.dir/func1.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/Assembler.dir/func1.c.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/carmel/Documents/Assembler-Project/func1.c -o CMakeFiles/Assembler.dir/func1.c.s
+CMakeFiles/Assembler.dir/util.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/Assembler.dir/util.c.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/carmel/Documents/Assembler-Project/util.c -o CMakeFiles/Assembler.dir/util.c.s
 
 CMakeFiles/Assembler.dir/pre_proc.c.o: CMakeFiles/Assembler.dir/flags.make
 CMakeFiles/Assembler.dir/pre_proc.c.o: /Users/carmel/Documents/Assembler-Project/pre_proc.c
@@ -142,7 +142,7 @@ CMakeFiles/Assembler.dir/hashtable.c.s: cmake_force
 # Object files for target Assembler
 Assembler_OBJECTS = \
 "CMakeFiles/Assembler.dir/main.c.o" \
-"CMakeFiles/Assembler.dir/func1.c.o" \
+"CMakeFiles/Assembler.dir/util.c.o" \
 "CMakeFiles/Assembler.dir/pre_proc.c.o" \
 "CMakeFiles/Assembler.dir/linkedlist.c.o" \
 "CMakeFiles/Assembler.dir/hashtable.c.o"
@@ -151,7 +151,7 @@ Assembler_OBJECTS = \
 Assembler_EXTERNAL_OBJECTS =
 
 Assembler: CMakeFiles/Assembler.dir/main.c.o
-Assembler: CMakeFiles/Assembler.dir/func1.c.o
+Assembler: CMakeFiles/Assembler.dir/util.c.o
 Assembler: CMakeFiles/Assembler.dir/pre_proc.c.o
 Assembler: CMakeFiles/Assembler.dir/linkedlist.c.o
 Assembler: CMakeFiles/Assembler.dir/hashtable.c.o

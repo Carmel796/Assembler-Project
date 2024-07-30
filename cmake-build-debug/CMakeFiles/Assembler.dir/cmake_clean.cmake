@@ -1,8 +1,6 @@
 file(REMOVE_RECURSE
   "Assembler"
   "Assembler.pdb"
-  "CMakeFiles/Assembler.dir/func1.c.o"
-  "CMakeFiles/Assembler.dir/func1.c.o.d"
   "CMakeFiles/Assembler.dir/hashtable.c.o"
   "CMakeFiles/Assembler.dir/hashtable.c.o.d"
   "CMakeFiles/Assembler.dir/linkedlist.c.o"
@@ -11,6 +9,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/Assembler.dir/main.c.o.d"
   "CMakeFiles/Assembler.dir/pre_proc.c.o"
   "CMakeFiles/Assembler.dir/pre_proc.c.o.d"
+  "CMakeFiles/Assembler.dir/util.c.o"
+  "CMakeFiles/Assembler.dir/util.c.o.d"
 )
 
 # Per-language clean rules from dependency scanning.

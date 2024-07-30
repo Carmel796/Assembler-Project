@@ -1,5 +1,7 @@
 #include "linkedlist.h"
 
+#include <string.h>
+
 struct node {
     char *key;
     void *value;
@@ -19,8 +21,10 @@ void insert_node(char *key, void *value, node *root) {
     }
 }
 
-node create_node(char *key, void *value) {
-    return;
+node *create_node(char *key, void *value) {
+    node new_node = malloc(sizeof(node));
+    new_node->key = strdup(key);
+    new_node->value =
 }
 
 node search_node(node root, char *key) {

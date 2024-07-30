@@ -1,10 +1,16 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "header.h"
-
+#include "util.h"
 
 FILE *fopen_with_ending(const char *source_file_name, const char *ending, const char *mode) {
+    char *file_name = create_file_name_with_ending(source_file_name, ending);
+    FILE *fp = NULL;
+    fp = fopen(file_name, mode);
+    if(fp == NULL) {
+        perror("Error");
+    }
+    return fp;
+}
+
+char *create_file_name_with_ending(const char *source_file_name, const char *ending) {
     size_t len1 = strlen(source_file_name), len2 = strlen(ending);
     char *result = malloc(len1 + len2 + 1);
     if(result == NULL) {
@@ -14,6 +20,9 @@ FILE *fopen_with_ending(const char *source_file_name, const char *ending, const 
 
     strcpy(result, source_file_name);
     strcat(result, ending);
+    free(result);
 
-    return fopen(result, mode);
+    return result;
 }
+
+void safe_malloc(size_t size);

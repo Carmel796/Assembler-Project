@@ -76,16 +76,10 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/Users/carmel/Documents/Assembler-Project/func1.c">
-			<Option target="Assembler"/>
-		</Unit>
 		<Unit filename="/Users/carmel/Documents/Assembler-Project/hashtable.c">
 			<Option target="Assembler"/>
 		</Unit>
 		<Unit filename="/Users/carmel/Documents/Assembler-Project/hashtable.h">
-			<Option target="Assembler"/>
-		</Unit>
-		<Unit filename="/Users/carmel/Documents/Assembler-Project/header.h">
 			<Option target="Assembler"/>
 		</Unit>
 		<Unit filename="/Users/carmel/Documents/Assembler-Project/linkedlist.c">
@@ -97,7 +91,19 @@
 		<Unit filename="/Users/carmel/Documents/Assembler-Project/main.c">
 			<Option target="Assembler"/>
 		</Unit>
+		<Unit filename="/Users/carmel/Documents/Assembler-Project/main.h">
+			<Option target="Assembler"/>
+		</Unit>
+		<Unit filename="/Users/carmel/Documents/Assembler-Project/pre-proc.h">
+			<Option target="Assembler"/>
+		</Unit>
 		<Unit filename="/Users/carmel/Documents/Assembler-Project/pre_proc.c">
+			<Option target="Assembler"/>
+		</Unit>
+		<Unit filename="/Users/carmel/Documents/Assembler-Project/util.c">
+			<Option target="Assembler"/>
+		</Unit>
+		<Unit filename="/Users/carmel/Documents/Assembler-Project/util.h">
 			<Option target="Assembler"/>
 		</Unit>
 		<Unit filename="/Users/carmel/Documents/Assembler-Project/CMakeLists.txt">

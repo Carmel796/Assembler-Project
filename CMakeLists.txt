@@ -4,10 +4,13 @@ project(Assembler C)
 set(CMAKE_C_STANDARD 90)
 
 add_executable(Assembler main.c
-        func1.c
-        header.h
+        util.c
+        main.h
         pre_proc.c
         linkedlist.c
         linkedlist.h
         hashtable.c
-        hashtable.h)
+        hashtable.h
+        pre_proc.h
+        pre_proc.h
+        util.h)
