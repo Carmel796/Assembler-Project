@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "util.h"
 
 typedef struct node *node;
 void insert_node(char *key, void *value, node *root);

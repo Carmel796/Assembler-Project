@@ -12,15 +12,19 @@ FILE *macro_search(char *file_name, hash_table macros) { /* creating new .as fil
     while(fgets(line, MAX_LINE, as_file)) {
         if (sscanf(line, "%s%n", word, &offset) == 1) {
             if (!strcmp(word, "endmacr")) {
+                printf("saw endmacr\n");
                 macro_flag = 0;
                 insert(macros, curr_macro);
             }
             else if (macro_flag) {
+                printf("macro line: %s\n", line);
                 handle_macro(&curr_line, line);
             }
             else if (!strcmp(word, "macr")) { /* not allowed macro inside a macro definitaon so this approch will work */
+                printf("saw macr\n");
                 macro_flag = 1;
-                insert_node(get_macro_name(line), (curr_line = create_node("", NULL)), &curr_macro);
+                curr_line = create_node("line head", NULL);
+                curr_macro = create_node("m_macr", curr_line);
             }
             else if ((curr_value = search(macros, word))) {
                 fprint_linked_list(am_file, curr_value);
@@ -37,22 +41,10 @@ FILE *macro_search(char *file_name, hash_table macros) { /* creating new .as fil
     return am_file;
 }
 
-char *get_macro_name(char *line_after_macr) {
-    char temp[MAX_LINE];
-    char *macro_name = malloc((strlen(temp) + 1) * sizeof(char));/* Temporary buffer to hold the extracted word */
-    if (sscanf(line_after_macr, "%s", temp) != 1) {
-        return NULL; /* If sscanf fails to read a word, return NULL */
-    }
-
-    /* Allocate memory for the resulting string */
-    if (macro_name == NULL) {
-        return NULL; /* If memory allocation fails, return NULL */
-    }
-
-    /* Copy the word into the allocated memory */
-    strcpy(macro_name, temp);
-
-    /* Return the dynamically allocated string */
+char *get_macro_name(char *line_after_macr){
+    char *macro_name = malloc(sizeof(char) * MAX_LINE);
+    printf("got the macro name");
+    sscanf(line_after_macr, "%s", macro_name);
     return macro_name;
 }
 

@@ -21,10 +21,12 @@ void insert_node(char *key, void *value, node *root) {
 
 node create_node(char *key, void *value) { /* what CONST means? */
     node new_node = malloc(sizeof(node));
+    printf("crearing node: %s\n", key);
     new_node->key = strdup(key);
+    printf("added key to new node: %s\n", key);
     new_node->value = strdup(value); /* Needs to be changed? */
     new_node->next = NULL;
-    return new_node; /* woth pnly 1 & it shours at me :( */
+    return new_node;
 }
 
 node search_node(node root, const char *key) {
