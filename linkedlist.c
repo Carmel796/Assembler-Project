@@ -27,7 +27,7 @@ node create_node(char *key, void *value) { /* what CONST means? */
     return new_node; /* woth pnly 1 & it shours at me :( */
 }
 
-node search_node(node root, char *key) {
+node search_node(node root, const char *key) {
     while (root != NULL)
         if (strcmp(get_key(root), key))
             root = get_next(root);

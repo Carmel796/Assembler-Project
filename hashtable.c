@@ -23,8 +23,8 @@ void insert(hash_table source, const node to_insert) {
     set_next(curr, to_insert);
 }
 
-void *search(const hash_table source, const unsigned char *key) {
-    unsigned long index = hash(key);
+void *search(const hash_table source,const char *key) {
+    unsigned long index = hash((const unsigned char *)key);
     node found = search_node(*(source + index), key);
     return found ? get_value(found) : NULL;
 }
