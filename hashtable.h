@@ -5,5 +5,8 @@
 #define HASH_TABLE_SIZE 100
 
 typedef node hash_table[HASH_TABLE_SIZE];
+unsigned long hash(const unsigned char *str);
+void insert(hash_table source, const node to_insert);
+void *search(const hash_table source,const char *key);
 
 #endif

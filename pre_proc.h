@@ -3,15 +3,14 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "linkedlist.c"
-#include "hashtable.c"
+#include "linkedlist.h"
+#include "hashtable.h"
+#include "util.h"
 
 #define MAX_LINE 82
 
-FILE *fopen_with_ending(char *source_file_name, char *ending, char *mode);
-FILE *macro_search(FILE *as_file, FILE *am_file , hash_table macros);
+FILE *macro_search(char *file_name, hash_table macros);
 char *get_macro_name(char *line_after_macr);
 void handle_macro(node *curr_line, char *line);
-void add_macro_to_table(node *macro_to_add, hash_table *macros);
 
 #endif

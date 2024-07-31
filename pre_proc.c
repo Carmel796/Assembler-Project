@@ -1,7 +1,6 @@
 #include "pre_proc.h"
 
 FILE *macro_search(char *file_name, hash_table macros) { /* creating new .as file, every line thats not macro decleration or body - add to new file */
-
     node curr_line = NULL, curr_macro = NULL, curr_value = NULL;
     FILE *as_file = fopen_with_ending(file_name, ".as", "r");
     FILE *am_file = fopen_with_ending(file_name, ".am", "w");
@@ -39,9 +38,22 @@ FILE *macro_search(char *file_name, hash_table macros) { /* creating new .as fil
 }
 
 char *get_macro_name(char *line_after_macr) {
-    char macro_name[MAX_LINE];
-    sscanf(macro_name, "%s", line_after_macr);
-    return macro_name; /* can i return value of variable declared inside of a function? */
+    char temp[MAX_LINE];
+    char *macro_name = malloc((strlen(temp) + 1) * sizeof(char));/* Temporary buffer to hold the extracted word */
+    if (sscanf(line_after_macr, "%s", temp) != 1) {
+        return NULL; /* If sscanf fails to read a word, return NULL */
+    }
+
+    /* Allocate memory for the resulting string */
+    if (macro_name == NULL) {
+        return NULL; /* If memory allocation fails, return NULL */
+    }
+
+    /* Copy the word into the allocated memory */
+    strcpy(macro_name, temp);
+
+    /* Return the dynamically allocated string */
+    return macro_name;
 }
 
 void handle_macro(node *curr_line, char *line) {

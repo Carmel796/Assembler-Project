@@ -20,9 +20,28 @@ char *create_file_name_with_ending(const char *source_file_name, const char *end
 
     strcpy(result, source_file_name);
     strcat(result, ending);
-    free(result);
 
     return result;
+}
+
+/* Implementation of strdup */
+char *strdup(const char *s) {
+    /* Find the length of the string */
+    size_t len = strlen(s);
+
+    /* Allocate memory for the duplicate string (+1 for the null terminator) */
+    char *dup = (char *)malloc((len + 1) * sizeof(char));
+
+    /* Check if memory allocation was successful */
+    if (dup == NULL) {
+        return NULL; /* Allocation failed */
+    }
+
+    /* Copy the string to the allocated memory */
+    strcpy(dup, s);
+
+    /* Return the duplicated string */
+    return dup;
 }
 
 void safe_malloc(size_t size) {

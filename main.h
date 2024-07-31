@@ -3,11 +3,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "pre_proc.c"
-#include "hashtable.c"
+#include "pre_proc.h"
+#include "hashtable.h"
 
-
-void handle_macro(char *line, int offset);
-void add_to_hash(char *key, char *value);
 
 #endif

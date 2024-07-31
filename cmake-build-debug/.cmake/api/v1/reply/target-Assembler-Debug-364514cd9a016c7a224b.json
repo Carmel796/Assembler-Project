@@ -2,7 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "Assembler"
+			"path" : "Assembler.exe"
+		},
+		{
+			"path" : "Assembler.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -35,7 +38,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-g -std=gnu90 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -mmacosx-version-min=13.6 -fcolor-diagnostics"
+					"fragment" : "-g -std=gnu90 -fdiagnostics-color=always"
 				}
 			],
 			"language" : "C",
@@ -69,12 +72,16 @@
 			{
 				"fragment" : "",
 				"role" : "flags"
+			},
+			{
+				"fragment" : "-lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32",
+				"role" : "libraries"
 			}
 		],
 		"language" : "C"
 	},
 	"name" : "Assembler",
-	"nameOnDisk" : "Assembler",
+	"nameOnDisk" : "Assembler.exe",
 	"paths" : 
 	{
 		"build" : ".",
@@ -154,7 +161,7 @@
 		},
 		{
 			"backtrace" : 1,
-			"path" : "pre-proc.h",
+			"path" : "pre_proc.h",
 			"sourceGroupIndex" : 1
 		},
 		{
