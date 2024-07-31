@@ -1,13 +1,30 @@
 #include "hashtable.h"
 
-unsigned long hash(unsigned char *str) {
+/* djb2 */
+unsigned long hash(const unsigned char *str) {
     unsigned long hash = 5381;
     int c;
 
-    while (c = *str++)
+    while ((c = *str++))
         hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
 
     return hash % HASH_TABLE_SIZE;
 }
 
-void insert(node *)
+void insert(hash_table source, const node to_insert) {
+    unsigned long index = hash((const unsigned char *)get_key(to_insert));
+    node curr = *(source + index);
+    if (curr == NULL)
+        *(source + index) = to_insert;
+    else while (get_next(curr) != NULL) {
+        curr = get_next(curr);
+    }
+
+    set_next(curr, to_insert);
+}
+
+void *search(const hash_table source, const unsigned char *key) {
+    unsigned long index = hash(key);
+    node found = search_node(*(source + index), key);
+    return found ? get_value(found) : NULL;
+}

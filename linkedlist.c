@@ -1,7 +1,5 @@
 #include "linkedlist.h"
 
-#include <string.h>
-
 struct node {
     char *key;
     void *value;
@@ -21,14 +19,41 @@ void insert_node(char *key, void *value, node *root) {
     }
 }
 
-node *create_node(char *key, void *value) { /* what CONST means? */
+node create_node(char *key, void *value) { /* what CONST means? */
     node new_node = malloc(sizeof(node));
     new_node->key = strdup(key);
     new_node->value = strdup(value); /* Needs to be changed? */
     new_node->next = NULL;
-    return &new_node;
+    return new_node; /* woth pnly 1 & it shours at me :( */
 }
 
 node search_node(node root, char *key) {
-    return;
+    while (root != NULL)
+        if (strcmp(get_key(root), key))
+            root = get_next(root);
+        else break;
+    return root;
+}
+
+void fprint_linked_list(FILE *output, node list) {
+    while (list != NULL) {
+        fprintf(output, "%s", get_key(list));
+        list = get_next(list);
+    }
+}
+
+node get_next(node curr) {
+    return curr->next;
+}
+
+const char *get_key(const node curr) {
+    return curr->key;
+}
+
+void set_next(node curr, node next) {
+    curr->next = next;
+}
+
+void *get_value(node curr) {
+    return curr->value;
 }

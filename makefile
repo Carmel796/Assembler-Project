@@ -1,11 +1,18 @@
-assembler: main.o func1.o
-	gcc -Wall -ansi -pedantic main.o func1.o -o assembler
+FLAGS := gcc -ansi -pedantic -Wall -g
+OFLAGS = -c -o $@
+CFILES := $(wildcard ./*.c)
+OFILES := $(patsubst %.c, %.o, $(CFILES))
 
-main.o: main.c main.h
-	gcc -Wall -ansi -pedantic -c main.c -o main.o
+all: $(OFILES)
+	$(FLAGS) $^ -o assembler
 
-func1.o: util.c main.h
-	gcc -Wall -ansi -pedantic -c func1.c -o func1.o
+%.o: %.c %.h
+	$(FLAGS) $< $(OFLAGS)
+
+.PHONEY: clean val
 
 clean:
-	rm -f *.o assembler
+	rm -rf *.o
+
+val:
+	valgrind --leak-check=full --track-origins=yes --show-leak-kinds=all ./assembler input

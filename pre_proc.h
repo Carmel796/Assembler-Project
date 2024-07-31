@@ -9,9 +9,9 @@
 #define MAX_LINE 82
 
 FILE *fopen_with_ending(char *source_file_name, char *ending, char *mode);
-FILE *macro_search(FILE *as_file, FILE *am_file , hashtable macros);
+FILE *macro_search(FILE *as_file, FILE *am_file , hash_table macros);
 char *get_macro_name(char *line_after_macr);
-node *handle_macro(node *curr_line, char *line);
-void add_macro_to_table(node *macro_to_add, hashtable *macros);
+void handle_macro(node *curr_line, char *line);
+void add_macro_to_table(node *macro_to_add, hash_table *macros);
 
 #endif
