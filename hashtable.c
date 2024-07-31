@@ -9,3 +9,5 @@ unsigned long hash(unsigned char *str) {
 
     return hash % HASH_TABLE_SIZE;
 }
+
+void insert(node *)

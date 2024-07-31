@@ -25,4 +25,6 @@ char *create_file_name_with_ending(const char *source_file_name, const char *end
     return result;
 }
 
-void safe_malloc(size_t size);
+void safe_malloc(size_t size) {
+    /* how to implement this? */
+}

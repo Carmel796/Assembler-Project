@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
         hashtable macros = {0};
 
         /* macro_search(FILE *as_file) - search for macro definition line-by-line, if found - adding them to the hashTable - add_to_hash(char *key, char *value) */
-        if (!macro_search(argv[argc], macros)) { /* as_file or am_file failed to open */
+        if (!macro_search(argv[argc], &macros)) { /* as_file or am_file failed to open */
             /* skip to next file */
         }
 
@@ -22,10 +22,6 @@ int main(int argc, char *argv[]) {
 
 
         printf("starting scond pass\n");
-
-
-        fclose(as_file);
-        fclose(am_file);
     }
 
     printf("Done\n");
