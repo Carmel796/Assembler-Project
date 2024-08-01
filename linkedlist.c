@@ -24,7 +24,7 @@ node create_node(char *key, void *value) { /* what CONST means? */
     printf("crearing node: %s\n", key);
     new_node->key = strdup(key);
     printf("added key to new node: %s\n", key);
-    new_node->value = strdup(value); /* Needs to be changed? */
+    new_node->value = strdup(value); /* Needs to be changed, cannot use strdup() when value is void* parameter */
     new_node->next = NULL;
     return new_node;
 }
