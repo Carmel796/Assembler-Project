@@ -11,6 +11,8 @@ void insert_node(char *key, void *value, node *root);
 node create_node(char *key, void *value);
 node search_node(node root, const char *key);
 void fprint_linked_list(FILE *output, node list);
+void *add_value(node source, void *value);
+node copy_list(node source);
 node get_next(node curr);
 const char *get_key(node curr);
 void set_next(node curr, node next);

@@ -16,11 +16,13 @@ void insert(hash_table source, const node to_insert) {
     node curr = *(source + index);
     if (curr == NULL)
         *(source + index) = to_insert;
-    else while (get_next(curr) != NULL) {
-        curr = get_next(curr);
-    }
 
-    set_next(curr, to_insert);
+    else {
+        while (get_next(curr) != NULL) {
+            curr = get_next(curr);
+        }
+        set_next(curr, to_insert);
+    }
 }
 
 void *search(const hash_table source,const char *key) {

@@ -17,20 +17,18 @@ FILE *macro_search(char *file_name, hash_table macros) { /* creating new .as fil
                 insert(macros, curr_macro);
             }
             else if (macro_flag) {
-                printf("macro line: %s\n", line);
                 handle_macro(&curr_line, line);
             }
             else if (!strcmp(word, "macr")) { /* not allowed macro inside a macro definitaon so this approch will work */
-                printf("saw macr\n");
                 macro_flag = 1;
-                curr_line = create_node("line head", NULL);
-                curr_macro = create_node("m_macr", curr_line);
+                insert_node(get_macro_name(line + offset), (curr_line = create_node("", NULL)), &curr_macro);
             }
             else if ((curr_value = search(macros, word))) {
                 fprint_linked_list(am_file, curr_value);
             }
             else {
-                fprintf(am_file, "%s", line);
+                if (*word != ';')
+                    fprintf(am_file, "%s", line);
             }
         }
     }
@@ -43,7 +41,7 @@ FILE *macro_search(char *file_name, hash_table macros) { /* creating new .as fil
 
 char *get_macro_name(char *line_after_macr){
     char *macro_name = malloc(sizeof(char) * MAX_LINE);
-    printf("got the macro name");
+    printf("got the macro name\n");
     sscanf(line_after_macr, "%s", macro_name);
     return macro_name;
 }

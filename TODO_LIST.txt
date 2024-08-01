@@ -1,0 +1,3 @@
+
+3. error handling
+4. free() what needs to be free
