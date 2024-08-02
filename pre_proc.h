@@ -9,7 +9,7 @@
 
 #define MAX_LINE 82
 
-FILE *macro_search(char *file_name, hash_table macros);
+FILE *macro_search(char *file_name, hash_table macros, FILE *am_file);
 char *get_macro_name(char *line_after_macr);
 void handle_macro(node *curr_line, char *line);
 

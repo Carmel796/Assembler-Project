@@ -2,6 +2,8 @@ file(REMOVE_RECURSE
   "Assembler.exe"
   "Assembler.exe.manifest"
   "Assembler.pdb"
+  "CMakeFiles/Assembler.dir/first_pass.c.obj"
+  "CMakeFiles/Assembler.dir/first_pass.c.obj.d"
   "CMakeFiles/Assembler.dir/hashtable.c.obj"
   "CMakeFiles/Assembler.dir/hashtable.c.obj.d"
   "CMakeFiles/Assembler.dir/linkedlist.c.obj"

@@ -128,6 +128,30 @@ Assembler/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Assembler.dir\build.make CMakeFiles/Assembler.dir/build
 .PHONY : Assembler/fast
 
+first_pass.obj: first_pass.c.obj
+.PHONY : first_pass.obj
+
+# target to build an object file
+first_pass.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Assembler.dir\build.make CMakeFiles/Assembler.dir/first_pass.c.obj
+.PHONY : first_pass.c.obj
+
+first_pass.i: first_pass.c.i
+.PHONY : first_pass.i
+
+# target to preprocess a source file
+first_pass.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Assembler.dir\build.make CMakeFiles/Assembler.dir/first_pass.c.i
+.PHONY : first_pass.c.i
+
+first_pass.s: first_pass.c.s
+.PHONY : first_pass.s
+
+# target to generate assembly for a file
+first_pass.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Assembler.dir\build.make CMakeFiles/Assembler.dir/first_pass.c.s
+.PHONY : first_pass.c.s
+
 hashtable.obj: hashtable.c.obj
 .PHONY : hashtable.obj
 
@@ -257,6 +281,9 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... Assembler
+	@echo ... first_pass.obj
+	@echo ... first_pass.i
+	@echo ... first_pass.s
 	@echo ... hashtable.obj
 	@echo ... hashtable.i
 	@echo ... hashtable.s

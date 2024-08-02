@@ -13,4 +13,6 @@ add_executable(Assembler main.c
         hashtable.h
         pre_proc.h
         pre_proc.h
-        util.h)
+        util.h
+        first_pass.c
+        first_pass.h)

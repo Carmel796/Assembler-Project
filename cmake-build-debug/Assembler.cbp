@@ -78,6 +78,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="C:/Users/frnkh/Assembler-Project/Assembler-Project/first_pass.c">
+			<Option target="Assembler"/>
+		</Unit>
+		<Unit filename="C:/Users/frnkh/Assembler-Project/Assembler-Project/first_pass.h">
+			<Option target="Assembler"/>
+		</Unit>
 		<Unit filename="C:/Users/frnkh/Assembler-Project/Assembler-Project/hashtable.c">
 			<Option target="Assembler"/>
 		</Unit>

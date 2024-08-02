@@ -1,9 +1,9 @@
 #include "pre_proc.h"
 
-FILE *macro_search(char *file_name, hash_table macros) { /* creating new .as file, every line thats not macro decleration or body - add to new file */
+FILE *macro_search(char *file_name, hash_table macros, FILE *am_file) { /* creating new .as file, every line thats not macro decleration or body - add to new file */
     node curr_line = NULL, curr_macro = NULL, curr_value = NULL;
     FILE *as_file = fopen_with_ending(file_name, ".as", "r");
-    FILE *am_file = fopen_with_ending(file_name, ".am", "w");
+    am_file = fopen_with_ending(file_name, ".am", "w");
     char line[MAX_LINE], word[MAX_LINE] = {0};
     int offset = 0, macro_flag = 0;
     if (!as_file || !am_file) {

@@ -80,12 +80,12 @@ clean: CMakeFiles/Assembler.dir/clean
 CMakeFiles/Assembler.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Assembler.dir\build.make CMakeFiles/Assembler.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Assembler.dir\build.make CMakeFiles/Assembler.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\frnkh\Assembler-Project\Assembler-Project\cmake-build-debug\CMakeFiles --progress-num=1,2,3,4,5,6 "Built target Assembler"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\frnkh\Assembler-Project\Assembler-Project\cmake-build-debug\CMakeFiles --progress-num=1,2,3,4,5,6,7 "Built target Assembler"
 .PHONY : CMakeFiles/Assembler.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/Assembler.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\frnkh\Assembler-Project\Assembler-Project\cmake-build-debug\CMakeFiles 6
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\frnkh\Assembler-Project\Assembler-Project\cmake-build-debug\CMakeFiles 7
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/Assembler.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\frnkh\Assembler-Project\Assembler-Project\cmake-build-debug\CMakeFiles 0
 .PHONY : CMakeFiles/Assembler.dir/rule
