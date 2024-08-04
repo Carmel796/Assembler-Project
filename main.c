@@ -1,16 +1,10 @@
 #include "main.h"
 
-/* TODO:
- * implement the Hash-Table + Hash-Function
- * functions for hash table: insert into table (index find with hash function?)
- * in macro_handle: getting the macro name from the line + insert into hash table
- */
-
-
 int main(int argc, char *argv[]) {
     FILE *am_file = NULL;
-    hash_table macros = {0};
+    hash_table macros;
     while(--argc > 0) {
+        macros = {0}; /* for every file new macros table */
         printf("start pre-preccesing, fetching macros\n");
 
         /* macro_search(FILE *as_file) - search for macro definition line-by-line, if found - adding them to the hashTable - add_to_hash(char *key, char *value) */

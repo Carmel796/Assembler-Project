@@ -20,6 +20,9 @@ FILE *macro_search(char *file_name, hash_table macros, FILE *am_file) { /* creat
                 handle_macro(&curr_line, line);
             }
             else if (!strcmp(word, "macr")) { /* not allowed macro inside a macro definitaon so this approch will work */
+                if (!check_macr(get_macro_name(line + offset))) {
+                    printf("Invalid macro name");
+                }
                 macro_flag = 1;
                 insert_node(get_macro_name(line + offset), (curr_line = create_node("", NULL)), &curr_macro);
             }

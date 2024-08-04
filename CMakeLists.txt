@@ -15,4 +15,6 @@ add_executable(Assembler main.c
         pre_proc.h
         util.h
         first_pass.c
-        first_pass.h)
+        first_pass.h
+        error_handle.c
+        error_handle.h)
