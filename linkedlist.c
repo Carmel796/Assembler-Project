@@ -20,7 +20,7 @@ void insert_node(char *key, void *value, node *root) {
 }
 
 node create_node(char *key, void *value) { /* what CONST means? */
-    node new_node = malloc(sizeof(node));
+    node new_node = safe_malloc(sizeof(node));
     new_node->key = strdup(key);
 
     new_node->value = value; /* Needs to be changed, cannot use strdup() when value is void* parameter */
@@ -41,6 +41,17 @@ void fprint_linked_list(FILE *output, node list) {
     while (list != NULL) {
         fprintf(output, "%s", get_key(list));
         list = get_next(list);
+    }
+}
+
+/* gets: node head and frees all subsequens node */
+void free_list(node head, void (*free_value)(void *)) {
+    while(!head) {
+        node temp = head;
+        free(head->key);
+        free(head->value);
+        head = head->next;
+        free(temp);
     }
 }
 

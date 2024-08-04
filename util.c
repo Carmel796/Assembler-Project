@@ -44,6 +44,19 @@ char *strdup(const char *s) {
     return dup;
 }
 
-void safe_malloc(size_t size) {
-    /* how to implement this? */
+void *safe_malloc(size_t size) {
+    void *mem = malloc(size);
+    if (mem == NULL) {
+        perror("Error");
+        exit(EXIT_FAILURE);
+    }
+    return mem;
+}
+
+int action__code_search(char *word) {
+    int i;
+    for (i = 0; i < ACTION_CODE_COUNT; i++) {
+        if (!strcmp(word, action_code[i])) return i;
+    }
+    return -1;
 }

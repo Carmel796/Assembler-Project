@@ -1,4 +1,1 @@
-1. error handling:
-    - macro name (what is illegal)
-
-2. free() what needs to be free
+1. tokenization:
