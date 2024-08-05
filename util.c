@@ -53,10 +53,52 @@ void *safe_malloc(size_t size) {
     return mem;
 }
 
-int action__code_search(char *word) {
+int action_code_search(char *word) {
     int i;
     for (i = 0; i < ACTION_CODE_COUNT; i++) {
         if (!strcmp(word, action_code[i])) return i;
     }
     return -1;
+}
+
+/* Function to extract a substring */
+char *substring(const char* source, int start, int end) {
+    int length;
+    char *substr;
+
+    /* Check for valid indices */
+    if (start < 0 || end > strlen(source) || start > end) {
+        printf("Invalid start or end indices.\n");
+        return NULL;
+    }
+
+    /* Calculate the length of the substring */
+    length = end - start;
+
+    /* Allocate memory for the substring */
+    substr = (char*)malloc((length + 1) * sizeof(char));
+
+    /* Ensure the memory allocation was successful */
+    if (substr == NULL) {
+        printf("Memory allocation failed.\n");
+        return NULL;
+    }
+
+    /* Copy the substring */
+    strncpy(substr, source + start, length);
+
+    /* Add the null terminator */
+    substr[length] = '\0';
+
+    return substr;
+}
+
+
+int alpha_and_numeric_only_string(char *word) {
+    while (*word) {
+        if (!isalpha(*word) || !isdigit(*word))
+            return 0;
+        word++;
+    }
+    return 1;
 }

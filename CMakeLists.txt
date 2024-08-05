@@ -17,4 +17,5 @@ add_executable(Assembler main.c
         first_pass.c
         first_pass.h
         error_handle.c
-        error_handle.h)
+        error_handle.h
+)

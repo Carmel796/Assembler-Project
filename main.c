@@ -2,7 +2,7 @@
 
 int main(int argc, char *argv[]) {
     while(--argc > 0) {
-        hash_table macros = {0};
+        hash_table macros = {0}, symbol_table = {0};
         FILE *am_file = NULL;
         printf("start pre-preccesing, fetching macros\n");
 
@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
         }
 
         printf("starting first pass\n");
-        /*first_pass(am_file, macros);*/
+        /*first_pass(am_file, macros, symbol_table);*/
 
 
         printf("starting scond pass\n");
