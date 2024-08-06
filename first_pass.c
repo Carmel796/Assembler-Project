@@ -2,13 +2,13 @@
 
 #include "error_handle.h"
 
-void first_pass(char *am_file_name, hash_table symbol_table) {
+void first_pass(char *am_file_name, hash_table symbols, hash_table macros) {
     FILE *am_file = fopen_with_ending(am_file_name, ".am", "r");
     char line[MAX_LINE], *token;
     int error = 0; /* error-code */
 
     while (fgets(line, MAX_LINE, am_file)) {
-        line_validation(line, &error);
+        line_validation(line, &error, symbols, macros);
         if (error) {
             /* an error accures, the error number will be in the error variable */
         } else {
@@ -17,7 +17,7 @@ void first_pass(char *am_file_name, hash_table symbol_table) {
     }
 }
 
-int line_validation(char *line, int *error) {
+int line_validation(char *line, int *error, hash_table symbols, hash_table macros) {
     char line_copy[MAX_LINE], *token;
 
     if (!line_size_check(line, MAX_LINE, error))
@@ -26,7 +26,7 @@ int line_validation(char *line, int *error) {
     strcpy(line_copy, line);
     token = strtok(line_copy, DELIMETERS);
 
-    if (is_label(token, error)) {
+    if (is_label(token, error, symbols, macros)) {
         return 1; /* is_label will continue to process the rest of the line in case of label. */
     }
     if (is_data(token, error) || is_string(token, error)) {
@@ -43,10 +43,10 @@ int line_validation(char *line, int *error) {
     return 0;
 }
 
-int is_label(char *word, int *error) {
+int is_label(char *word, int *error, hash_table symbols, hash_table macros) {
     char *rest;
 
-    if (!check_label_name(word, error)) {
+    if (!check_label_name(word, error, symbols, macros)) {
         return 0; /* not a label... (if it is a label but the label name have error, check_label_name will notice in the error variable) */
     }
 
@@ -58,11 +58,11 @@ int is_label(char *word, int *error) {
 
 }
 
-int check_label_name(char *word, int *error) {
+int check_label_name(char *word, int *error, hash_table symbols, hash_table macros) {
     int len = strlen(word);
     if (!strcmp(word[len-1], ":"))
         return 0;
-    if (len > 31 || !isalpha(word[0]) || !alpha_and_numeric_only_string(substring(word, 1, len-1)) || search(symbol_table, word))
+    if (len > 31 || !isalpha(word[0]) || !alpha_and_numeric_only_string(substring(word, 1, len-1)) || search(symbols, word) || search(macros, word))
         *error = 4; /* 4: error in label name */
         return 0;
     return 1;

@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include "pre_proc.h"
 #include "hashtable.h"
+#include "first_pass.h"
 
 
 #endif

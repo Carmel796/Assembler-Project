@@ -2,7 +2,7 @@
 
 int main(int argc, char *argv[]) {
     while(--argc > 0) {
-        hash_table macros = {0}, symbol_table = {0};
+        hash_table macros = {0}, symbols = {0};
         printf("start pre-preccesing, fetching macros\n");
 
         /* macro_search(FILE *as_file) - search for macro definition line-by-line, if found - adding them to the hashTable - add_to_hash(char *key, char *value) */
@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
         }
 
         printf("starting first pass\n");
-        /*first_pass(argv[argv], macros, symbol_table);*/
+        first_pass(argv[argv], macros, symbols, macros);
 
 
         printf("starting scond pass\n");
