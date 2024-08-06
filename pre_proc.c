@@ -37,8 +37,7 @@ FILE *macro_search(char *file_name, hash_table macros) { /* creating new .as fil
     }
 
     fclose(as_file);
-    rewind(am_file);
-    return am_file;
+    fclose(am_file);
 }
 
 char *get_macro_name(char *line_after_macr){

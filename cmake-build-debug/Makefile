@@ -200,30 +200,6 @@ hashtable.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Assembler.dir\build.make CMakeFiles/Assembler.dir/hashtable.c.s
 .PHONY : hashtable.c.s
 
-label_value.obj: label_value.c.obj
-.PHONY : label_value.obj
-
-# target to build an object file
-label_value.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Assembler.dir\build.make CMakeFiles/Assembler.dir/label_value.c.obj
-.PHONY : label_value.c.obj
-
-label_value.i: label_value.c.i
-.PHONY : label_value.i
-
-# target to preprocess a source file
-label_value.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Assembler.dir\build.make CMakeFiles/Assembler.dir/label_value.c.i
-.PHONY : label_value.c.i
-
-label_value.s: label_value.c.s
-.PHONY : label_value.s
-
-# target to generate assembly for a file
-label_value.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Assembler.dir\build.make CMakeFiles/Assembler.dir/label_value.c.s
-.PHONY : label_value.c.s
-
 linkedlist.obj: linkedlist.c.obj
 .PHONY : linkedlist.obj
 
@@ -338,9 +314,6 @@ help:
 	@echo ... hashtable.obj
 	@echo ... hashtable.i
 	@echo ... hashtable.s
-	@echo ... label_value.obj
-	@echo ... label_value.i
-	@echo ... label_value.s
 	@echo ... linkedlist.obj
 	@echo ... linkedlist.i
 	@echo ... linkedlist.s

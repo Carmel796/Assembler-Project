@@ -8,8 +8,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/Assembler.dir/first_pass.c.obj.d"
   "CMakeFiles/Assembler.dir/hashtable.c.obj"
   "CMakeFiles/Assembler.dir/hashtable.c.obj.d"
-  "CMakeFiles/Assembler.dir/label_value.c.obj"
-  "CMakeFiles/Assembler.dir/label_value.c.obj.d"
   "CMakeFiles/Assembler.dir/linkedlist.c.obj"
   "CMakeFiles/Assembler.dir/linkedlist.c.obj.d"
   "CMakeFiles/Assembler.dir/main.c.obj"

@@ -53,14 +53,6 @@ void *safe_malloc(size_t size) {
     return mem;
 }
 
-int action_code_search(char *word) {
-    int i;
-    for (i = 0; i < ACTION_CODE_COUNT; i++) {
-        if (!strcmp(word, action_code[i])) return i;
-    }
-    return -1;
-}
-
 /* Function to extract a substring */
 char *substring(const char* source, int start, int end) {
     int length;

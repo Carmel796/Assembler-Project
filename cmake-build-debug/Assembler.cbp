@@ -96,12 +96,6 @@
 		<Unit filename="C:/Users/frnkh/Documents/Assembler-Project/hashtable.h">
 			<Option target="Assembler"/>
 		</Unit>
-		<Unit filename="C:/Users/frnkh/Documents/Assembler-Project/label_value.c">
-			<Option target="Assembler"/>
-		</Unit>
-		<Unit filename="C:/Users/frnkh/Documents/Assembler-Project/label_value.h">
-			<Option target="Assembler"/>
-		</Unit>
 		<Unit filename="C:/Users/frnkh/Documents/Assembler-Project/linkedlist.c">
 			<Option target="Assembler"/>
 		</Unit>
