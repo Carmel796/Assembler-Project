@@ -1,14 +1,17 @@
 #include "first_pass.h"
 
-#include "error_handle.h"
+typedef struct symbol_value {
+    int value; /* DC for .data or .string, IC for Instruction */
+    int type; /*flag - 0: Data(.data or .string), 1: Instruction */
+} symbol_value;
 
 void first_pass(char *am_file_name, hash_table symbols, hash_table macros) {
     FILE *am_file = fopen_with_ending(am_file_name, ".am", "r");
     char line[MAX_LINE], *token;
-    int error = 0; /* error-code */
+    int error = 0, DC = 0, IC = 0; /* error-code */
 
     while (fgets(line, MAX_LINE, am_file)) {
-        line_validation(line, &error, symbols, macros);
+        line_validation(line, &error, symbols, macros, &DC, &IC);
         if (error) {
             /* an error accures, the error number will be in the error variable */
         } else {
@@ -17,47 +20,47 @@ void first_pass(char *am_file_name, hash_table symbols, hash_table macros) {
     }
 }
 
-int line_validation(char *line, int *error, hash_table symbols, hash_table macros) {
+void line_validation(char *line, int *error, hash_table symbols, hash_table macros, int *DC, int *IC) {
     char line_copy[MAX_LINE], *token;
+    int symbol_flag = 0; /* 0: no label definition currently, 1: there is label definition */
 
     if (!line_size_check(line, MAX_LINE, error))
-        return 0;
-
+        return;
     strcpy(line_copy, line);
     token = strtok(line_copy, DELIMETERS);
 
     if (is_label(token, error, symbols, macros)) {
-        return 1; /* is_label will continue to process the rest of the line in case of label. */
+        symbol_flag = 1; /* is_label will continue to process the rest of the line in case of label. */
     }
-    if (is_data(token, error) || is_string(token, error)) {
-        return 1; /* is_data and is_string will continue to process the rest of the line in case of .data or .string.  */ */
+    if (error) /* eror acures in label definition (name / length / ...) */
+        return;
+    if (is_data(token, error, &symbol_flag, DC) || is_string(token, error, &symbol_flag, DC)) {
+        return; /* is_data and is_string will continue to process the rest of the line in case of .data or .string.  */ */
     }
     if (is_entry(token, error) || is_extern(token, error)) {
-        return 1; /* is_entry and is_extern will continue to process the rest of the line in case of .entry or .extern.  */
+        return; /* is_entry and is_extern will continue to process the rest of the line in case of .entry or .extern.  */
     }
-    if (is_opcade(token, error)) {
-        return 1; /* is_opcode will continue to process the rest of the line in case of opcode {mov, lea...} */
+    if (is_opcade(token, error, &symbol_flag, IC)) {
+        return; /* is_opcode will continue to process the rest of the line in case of opcode {mov, lea...} */
     }
 
     *error = 2; /* 2: not a saved word in the assebmly language... */
-    return 0;
+    return;
 }
 
 int is_label(char *word, int *error, hash_table symbols, hash_table macros) {
-    char *rest;
-
     if (!check_label_name(word, error, symbols, macros)) {
         return 0; /* not a label... (if it is a label but the label name have error, check_label_name will notice in the error variable) */
     }
 
     /* if got here, we have a label definition, label-name: word, label-arg: rest */
-    rest = strtok(NULL, DELIMETERS); /* now rest is the  */
-
-
-
-
+    return 1;
 }
 
+/* return 0 in cases:
+ * - not label definition
+ * - error in label definition
+ */
 int check_label_name(char *word, int *error, hash_table symbols, hash_table macros) {
     int len = strlen(word);
     if (!strcmp(word[len-1], ":"))
@@ -74,4 +77,26 @@ int line_size_check(char *line, int size, int *error) {
         return 0;
     } return 1; /* length is ok */
 }
+
+int is_data(char *word, int *error, int *DC, int *is_symbol, char *symbol) {
+    int *array, length = 0;
+    char *token;
+    if (strcmp(word, ".data")) {
+        return 0; /* word is not .data */
+    }
+
+    /* word == .data, apply right actions */
+    token = strtok(NULL, ",");
+    if (is_symbol) {
+        add_symbol(symbol, DC, 0);
+    }
+    array = malloc(sizeof(int));
+    while (token != NULL) {
+        length++;
+        /* CONTINUE!!! */
+    }
+
+}
+
+
 
