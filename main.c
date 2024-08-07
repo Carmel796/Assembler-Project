@@ -14,6 +14,11 @@ int main(int argc, char *argv[]) {
         
 
         printf("starting second pass\n");
+
+
+
+        free_table(macros, 0);
+        free_table(symbols, 1);
     }
 
     printf("Done\n");

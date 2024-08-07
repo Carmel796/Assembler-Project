@@ -30,3 +30,11 @@ void *search(const hash_table source,const char *key) {
     node found = search_node(*(source + index), key);
     return found ? get_value(found) : NULL;
 }
+
+void free_table(hash_table src, int flag) {
+    int i;
+    for (i = 0; i < HASH_TABLE_SIZE; i++) {
+        if (flag) free_list(src[i], free_list);
+        else free_list(src[i], NULL);
+    }
+}

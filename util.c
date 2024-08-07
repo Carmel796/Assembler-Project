@@ -96,3 +96,4 @@ int alpha_and_numeric_only_string(char *word) {
     }
     return 1;
 }
+

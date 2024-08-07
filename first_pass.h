@@ -7,15 +7,20 @@
 
 #define MAX_SYMBOL_LENGTH 31
 
-int DC, IC;
+extern int DC, IC;
+extern short data_image[4096];
+extern short code_image[4096];
 
+typedef enum {
+ false, true
+} bool;
 
 void first_pass(char *am_file_name, hash_table symbols, hash_table macros);
 int is_label(char *name, int *error, hash_table macros, hash_table symbols);
 int check_symbol_name(char *name);
 void add_symbol(hash_table source, char *key, int count, int flag);
 void handle_data(char *arg, int *error);
-int check_data_arg(char *arg);
+bool check_comma(char *arg);
 void handle_string(char *str, int *error);
 int check_string(char *str);
 void handle_extern(char *word, int *error);

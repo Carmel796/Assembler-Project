@@ -1,6 +1,7 @@
 #include "first_pass.h"
 
-
+int DC = 0;
+int IC = 0;
 struct symbol_value {
     int type; /* 0: data, 1: opcode */
     int count; /* DC for data, IC for opcode */
@@ -11,8 +12,6 @@ void first_pass(char *am_file_name, hash_table symbols, hash_table macros) {
     int error = 0, error_size = 0, symbol_flag = 0, offset, total_offset, line_index = -1;
     FILE *am_file = fopen_with_ending(am_file_name, ".am", "r");
 
-    DC = 0;
-    IC = 0;
 
     while (fgets(line, MAX_LINE, am_file)) {
         printf("\n");
@@ -25,7 +24,10 @@ void first_pass(char *am_file_name, hash_table symbols, hash_table macros) {
         total_offset = 0;
 
         /* gets first word of line into first_word, and first_word length into offset */
-        sscanf(line, "%s%n", word_buffer, &offset);
+        if (!sscanf(line, "%s%n", word_buffer, &offset))
+            continue;
+
+
         total_offset += offset;
 
         printf("first word of line %d: %s\n", line_index, word_buffer);
@@ -41,7 +43,6 @@ void first_pass(char *am_file_name, hash_table symbols, hash_table macros) {
             strcpy(symbol_name, word_buffer);
             sscanf(line + total_offset, "%s%n", word_buffer, &offset);
             total_offset += offset;
-
         }
 
         if (!strcmp(word_buffer, ".data") || !strcmp(word_buffer, ".string")) {
@@ -139,7 +140,7 @@ int check_symbol_name(char *name) {
 
 void add_symbol(hash_table source, char *key, int count, int flag) {
     node symbol;
-    struct symbol_value *value = malloc(sizeof(struct symbol_value));
+    struct symbol_value *value = safe_malloc(sizeof(struct symbol_value));
     value->type = flag;
     value->count = count;
 
@@ -151,7 +152,7 @@ void add_symbol(hash_table source, char *key, int count, int flag) {
 /* HANDALING .DATA LINE */
 void handle_data(char *arg, int *error) {
     char copy[MAX_LINE], *token;
-    if (!check_data_arg(arg)) {
+    if (!check_comma(arg)) {
         *error = 3; /* 3: error in .data line arguments */
         return;
     }
@@ -167,20 +168,29 @@ void handle_data(char *arg, int *error) {
     }
 }
 
-int check_data_arg(char *arg) {
-    char curr[MAX_LINE];
+/* 1 2,3 */
+bool check_comma(char *arg) {
+    bool expect_comma = false;
 
     while (*arg != '\0') {
-        /* building the number in string curr */
-        while (*arg != ',') {
-            strcat(curr, (char *)*arg);
+        if (isspace(*arg))
+            arg++;
+
+        else if (*arg == ',') {
+            if (!expect_comma) return false;
+            expect_comma = false;
+            arg++;
         }
-        if (!atoi(curr)) return 0;
-        arg++;
-        curr[0] = '\0';
+
+        else {
+            if (expect_comma) return false;
+            while (*arg != ',' && !isspace(*arg))
+                arg++;
+            expect_comma = true;
+        }
     }
 
-    return 1;
+    return true;
 }
 
 /* HANDALING .STRING LINE */
