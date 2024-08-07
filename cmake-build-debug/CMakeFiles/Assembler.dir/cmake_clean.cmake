@@ -6,6 +6,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/Assembler.dir/error_handle.c.obj.d"
   "CMakeFiles/Assembler.dir/first_pass.c.obj"
   "CMakeFiles/Assembler.dir/first_pass.c.obj.d"
+  "CMakeFiles/Assembler.dir/first_pass_new.c.obj"
+  "CMakeFiles/Assembler.dir/first_pass_new.c.obj.d"
   "CMakeFiles/Assembler.dir/hashtable.c.obj"
   "CMakeFiles/Assembler.dir/hashtable.c.obj.d"
   "CMakeFiles/Assembler.dir/linkedlist.c.obj"

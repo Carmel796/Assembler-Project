@@ -6,5 +6,6 @@
 
 int macro_check(char *name);
 int empty_line(char *line);
+void print_error(int error_num);
 
 #endif

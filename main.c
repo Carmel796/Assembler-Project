@@ -6,16 +6,14 @@ int main(int argc, char *argv[]) {
         printf("start pre-preccesing, fetching macros\n");
 
         /* macro_search(FILE *as_file) - search for macro definition line-by-line, if found - adding them to the hashTable - add_to_hash(char *key, char *value) */
-        if (!macro_search(argv[argc], macros)) { /* as_file or am_file failed to open */
-            printf("faied to open .as file or .am file\n");
-            continue;
-        }
+        macro_search(argv[argc], macros);
 
         printf("starting first pass\n");
-        first_pass(argv[argv], macros, symbols, macros);
+        first_pass(argv[argc], symbols, macros);
 
+        
 
-        printf("starting scond pass\n");
+        printf("starting second pass\n");
     }
 
     printf("Done\n");

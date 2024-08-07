@@ -10,6 +10,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/Users/frnkh/Documents/Assembler-Project/error_handle.c" "CMakeFiles/Assembler.dir/error_handle.c.obj" "gcc" "CMakeFiles/Assembler.dir/error_handle.c.obj.d"
   "C:/Users/frnkh/Documents/Assembler-Project/first_pass.c" "CMakeFiles/Assembler.dir/first_pass.c.obj" "gcc" "CMakeFiles/Assembler.dir/first_pass.c.obj.d"
+  "C:/Users/frnkh/Documents/Assembler-Project/first_pass_new.c" "CMakeFiles/Assembler.dir/first_pass_new.c.obj" "gcc" "CMakeFiles/Assembler.dir/first_pass_new.c.obj.d"
   "C:/Users/frnkh/Documents/Assembler-Project/hashtable.c" "CMakeFiles/Assembler.dir/hashtable.c.obj" "gcc" "CMakeFiles/Assembler.dir/hashtable.c.obj.d"
   "C:/Users/frnkh/Documents/Assembler-Project/linkedlist.c" "CMakeFiles/Assembler.dir/linkedlist.c.obj" "gcc" "CMakeFiles/Assembler.dir/linkedlist.c.obj.d"
   "C:/Users/frnkh/Documents/Assembler-Project/main.c" "CMakeFiles/Assembler.dir/main.c.obj" "gcc" "CMakeFiles/Assembler.dir/main.c.obj.d"

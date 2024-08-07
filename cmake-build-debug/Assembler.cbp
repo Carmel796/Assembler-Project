@@ -90,6 +90,12 @@
 		<Unit filename="C:/Users/frnkh/Documents/Assembler-Project/first_pass.h">
 			<Option target="Assembler"/>
 		</Unit>
+		<Unit filename="C:/Users/frnkh/Documents/Assembler-Project/first_pass_new.c">
+			<Option target="Assembler"/>
+		</Unit>
+		<Unit filename="C:/Users/frnkh/Documents/Assembler-Project/first_pass_new.h">
+			<Option target="Assembler"/>
+		</Unit>
 		<Unit filename="C:/Users/frnkh/Documents/Assembler-Project/hashtable.c">
 			<Option target="Assembler"/>
 		</Unit>
