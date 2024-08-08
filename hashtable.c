@@ -1,5 +1,7 @@
 #include "hashtable.h"
 
+#include "first_pass.h"
+
 /* djb2 */
 unsigned long hash(const unsigned char *str) {
     unsigned long hash = 5381;
@@ -26,15 +28,24 @@ void insert(hash_table source, const node to_insert) {
 }
 
 void *search(const hash_table source,const char *key) {
+    node found;
     unsigned long index = hash((const unsigned char *)key);
-    node found = search_node(*(source + index), key);
-    return found ? get_value(found) : NULL;
+    found = search_node(*(source + index), key);
+    return found != NULL ? get_value(found) : NULL;
 }
 
 void free_table(hash_table src, int flag) {
     int i;
     for (i = 0; i < HASH_TABLE_SIZE; i++) {
-        if (flag) free_list(src[i], free_list);
-        else free_list(src[i], NULL);
+        if (src[i] != NULL) {
+            if (flag) {
+                printf("freeing macro table node\n");
+                free_list(src[i], free_nested_list, 1); /* 1: free key */
+            } else {
+                printf("freeing symbols table node\n");
+                free_list(src[i], NULL, 0);
+            }
+        }
     }
 }
+

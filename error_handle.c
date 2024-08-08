@@ -1,11 +1,13 @@
 #include "error_handle.h"
 
-int macro_check(char *name){
-
-}
+#include <ctype.h>
 
 int empty_line(char *line){
-
+    while (*line != '\0') {
+        if (!isspace(*line)) return 0;
+        line++;
+    }
+    return 1;
 }
 
 void print_error(int error_num) {

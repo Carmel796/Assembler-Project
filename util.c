@@ -7,16 +7,13 @@ FILE *fopen_with_ending(const char *source_file_name, const char *ending, const 
     if(fp == NULL) {
         perror("Error");
     }
+    free(file_name);
     return fp;
 }
 
 char *create_file_name_with_ending(const char *source_file_name, const char *ending) {
     size_t len1 = strlen(source_file_name), len2 = strlen(ending);
-    char *result = malloc(len1 + len2 + 1);
-    if(result == NULL) {
-        fprintf(stderr, "Memory allocation failed\n");
-        exit(EXIT_FAILURE);
-    }
+    char *result = safe_malloc(len1 + len2 + 1);
 
     strcpy(result, source_file_name);
     strcat(result, ending);

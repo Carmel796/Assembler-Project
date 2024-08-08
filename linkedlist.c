@@ -7,11 +7,11 @@ struct node {
 };
 
 void insert_node(char *key, void *value, node *root) {
-    node new = create_node(key, value); /* what CONST means? */
+    node new = create_node(key, value), curr; /* what CONST means? */
     if (*root == NULL)
         *root = new;
     else {
-        node curr = *root;
+        curr = *root;
         while(curr->next != NULL)
             curr = curr->next;
 
@@ -21,8 +21,8 @@ void insert_node(char *key, void *value, node *root) {
 
 /* returns a new node with key and value allocated by the user */
 node create_node(char *key, void *value) { /* what CONST means? */
-    node new_node = safe_malloc(sizeof(node));
-    new_node->key = key;
+    node new_node = safe_malloc(sizeof(struct node));
+    new_node->key = strdup(key);
 
     new_node->value = value; /* Needs to be changed, cannot use strdup() when value is void* parameter */
 
@@ -31,34 +31,53 @@ node create_node(char *key, void *value) { /* what CONST means? */
 }
 
 node search_node(node root, const char *key) {
-    while (root != NULL)
-        if (strcmp(get_key(root), key))
-            root = get_next(root);
-        else break;
-    return root;
+    while (root != NULL) {
+        if (!strcmp(root->key, key)) {
+            return root;
+        }
+        root = root->next;
+    }
+    return NULL;
 }
 
 void fprint_linked_list(FILE *output, node list) {
     while (list != NULL) {
         fprintf(output, "%s", get_key(list));
-        list = get_next(list);
+        list = list->next;
     }
 }
 
 /* gets: node head and frees all subsequens node */
-void free_list(node head, void (*free_value)(void *)) {
-    while(head != NULL) {
+void free_list(node head, void (*free_value)(void *), int flag) {
+    while (head != NULL) {
         node temp = head;
-        free(head->key);
-        if (free_value == NULL) {
-            free(head->value);
-        } else {
-            free_value(head->value);
+        printf("freeing node: %s\n", head->key);
+        if (head->key && flag) {
+            free(head->key);
         }
+
+        if (head->value != NULL) {
+            if (free_value) {
+                free_value(head->value);
+            } else {
+                free(head->value);
+            }
+        }
+
         head = head->next;
         free(temp);
     }
 }
+
+
+
+void free_nested_list(void *value) {
+    node nested_head = (node)value;  /* Use appropriate type casting */
+    if (nested_head != NULL) {
+        free_list(nested_head, NULL, 0);
+    }
+}
+
 
 node get_next(node curr) {
     return curr->next;
@@ -73,5 +92,5 @@ void set_next(node curr, node next) {
 }
 
 void *get_value(node curr) {
-    return curr->value;
+    return curr != NULL ? curr->value: NULL;
 }

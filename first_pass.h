@@ -18,15 +18,16 @@ typedef enum {
 void first_pass(char *am_file_name, hash_table symbols, hash_table macros);
 int is_label(char *name, int *error, hash_table macros, hash_table symbols);
 int check_symbol_name(char *name);
-void add_symbol(hash_table source, char *key, int count, int flag);
+void add_symbol(hash_table symbols, char *key, int count, int flag);
 void handle_data(char *arg, int *error);
-bool check_comma(char *arg);
+bool check_comma(const char *arg);
 void handle_string(char *str, int *error);
 int check_string(char *str);
 void handle_extern(char *word, int *error);
 void handle_entry(char *word, int *error);
 int is_opcode(char *word);
 void handle_opcode(char *word, int *error);
+void print_linked_list(node list);
 
 
 /* ERRORS:

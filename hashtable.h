@@ -7,7 +7,7 @@
 typedef node hash_table[HASH_TABLE_SIZE];
 unsigned long hash(const unsigned char *str);
 void insert(hash_table source, const node to_insert);
-void *search(const hash_table source,const char *key);
+void *search(const hash_table source, const char *key);
 void free_table(hash_table src, int flag);
 
 

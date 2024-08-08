@@ -15,4 +15,4 @@ clean:
 	rm -rf *.o
 
 val:
-	valgrind --leak-check=full --track-origins=yes --show-leak-kinds=all ./assembler input
+	valgrind --leak-check=full --track-origins=yes --show-leak-kinds=all ./assembler file1

@@ -9,9 +9,9 @@
 
 
 
-FILE *macro_search(char *file_name, hash_table macros);
+int macro_search(char *file_name, hash_table macros);
 char *get_macro_name(char *line_after_macr);
 void handle_macro(node *curr_line, char *line);
-int check_macr(char *line_after_macr);
+int check_macr(char *line_after_macr, hash_table macros);
 
 #endif

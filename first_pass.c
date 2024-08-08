@@ -8,8 +8,8 @@ struct symbol_value {
 };
 
 void first_pass(char *am_file_name, hash_table symbols, hash_table macros) {
-    char line[MAX_LINE], word_buffer[MAX_LINE], symbol_name[MAX_SYMBOL_LENGTH];
-    int error = 0, error_size = 0, symbol_flag = 0, offset, total_offset, line_index = -1;
+    char line[MAX_LINE] = {0}, word_buffer[MAX_LINE] = {0}, symbol_name[MAX_SYMBOL_LENGTH] = {0};
+    int error = 0, symbol_flag = 0, offset = 0, total_offset = 0, line_index = -1;
     FILE *am_file = fopen_with_ending(am_file_name, ".am", "r");
 
 
@@ -47,8 +47,8 @@ void first_pass(char *am_file_name, hash_table symbols, hash_table macros) {
 
         if (!strcmp(word_buffer, ".data") || !strcmp(word_buffer, ".string")) {
             if (symbol_flag) {
-                printf("symbol detected for line %d: '%s\n'", line_index, symbol_name);
-                add_symbol(symbols, word_buffer, DC, 0);
+                printf("adding symbol: %s to symbol table\n", symbol_name);
+                add_symbol(symbols, symbol_name, DC, 0);
             }
 
             /* distinguish between .data and .string, any errors will add to error variable */
@@ -83,6 +83,10 @@ void first_pass(char *am_file_name, hash_table symbols, hash_table macros) {
         }
 
         if (is_opcode(word_buffer)) {
+            if (symbol_flag) {
+                printf("adding symbol: %s to symbol table\n", symbol_name);
+                add_symbol(symbols, symbol_name, IC, 1);
+            }
             handle_opcode(word_buffer, &error);
             if (error) {
                 print_error(error);
@@ -96,14 +100,11 @@ void first_pass(char *am_file_name, hash_table symbols, hash_table macros) {
     }
 
     fclose(am_file);
-
 }
 
 /* HANDALING SYMBOL IN LINE */
 int is_label(char *name, int *error, hash_table macros, hash_table symbols) {
     int len = strlen(name);
-
-    printf("checking if '%s' is a label\n", name);
 
     /* does is even a symbol definition? */
     if (name[len-1] != ':') {
@@ -123,35 +124,39 @@ int is_label(char *name, int *error, hash_table macros, hash_table symbols) {
     }
 
     /* if got here, there is a symbol, with correct name, and no exiting macro / symbol with the same name */
+    printf("%s is a lable\n", name);
     return 1;
 }
 
 int check_symbol_name(char *name) {
     int len = strlen(name);
+    char *sub = NULL;
 
     /* checl the requirments of label name */
-    if (len > 31 || !isalpha(name[0]) || !alpha_and_numeric_only_string(substring(name, 1, len-1))){
+    if (len > 31 || !isalpha(name[0]) || !alpha_and_numeric_only_string((sub = substring(name, 1, len-1)))){
+        free(sub);
         return 0;
     }
 
     /* label name is fine and meets the requirments of label name */
+    free(sub);
     return 1;
 }
 
-void add_symbol(hash_table source, char *key, int count, int flag) {
+void add_symbol(hash_table symbols, char *key, int count, int flag) {
     node symbol;
     struct symbol_value *value = safe_malloc(sizeof(struct symbol_value));
     value->type = flag;
     value->count = count;
 
     symbol = create_node(key, value);
-    insert(source, symbol);
+    insert(symbols, symbol);
 }
 
 
 /* HANDALING .DATA LINE */
 void handle_data(char *arg, int *error) {
-    char copy[MAX_LINE], *token;
+    char copy[MAX_LINE] = {0}, *token = NULL;
     if (!check_comma(arg)) {
         *error = 3; /* 3: error in .data line arguments */
         return;
@@ -159,60 +164,57 @@ void handle_data(char *arg, int *error) {
 
     /* arguments of .data are valid, need to code them into memory */
     strcpy(copy, arg);
-    token = strtok(arg, ",");
+    token = strtok(copy, ",");
 
     while (token != NULL) {
-        /* TO BE CONTINUED */
+        /* Process token here */
 
         token = strtok(NULL, ",");
     }
 }
 
+
 /* 1 2,3 */
-bool check_comma(char *arg) {
+bool check_comma(const char *arg) {
     bool expect_comma = false;
-
     while (*arg != '\0') {
-        if (isspace(*arg))
+        if (isspace(*arg)) {
             arg++;
-
-        else if (*arg == ',') {
+        } else if (*arg == ',') {
             if (!expect_comma) return false;
             expect_comma = false;
             arg++;
-        }
-
-        else {
+        } else {
             if (expect_comma) return false;
-            while (*arg != ',' && !isspace(*arg))
+            while (*arg != ',' && !isspace(*arg) && *arg != '\0') {
                 arg++;
+            }
             expect_comma = true;
         }
     }
-
     return true;
 }
 
+
 /* HANDALING .STRING LINE */
 void handle_string(char *str, int *error) {
-    char copy[MAX_LINE], *token;
+    char copy[MAX_LINE] = {0}, *token = NULL;
     if (!check_string(str)) {
         *error = 4; /* 4: error in .string string */
         return;
     }
 
     /* if got here string is valid, need to code each char into memory */
-    /* arguments of .data are valid, need to code them into memory */
     strcpy(copy, str);
-    token = strtok(str, ",");
+    token = strtok(copy, ",");
 
     while (token != NULL) {
-        /* TO BE CONTINUED */
+        /* Process token here */
 
         token = strtok(NULL, ",");
     }
-
 }
+
 
 int check_string(char *str) {
     size_t length = strlen(str);
@@ -255,7 +257,9 @@ void handle_entry(char *word, int *error) {
 /* HANDALING OPCODE LINE */
 int is_opcode(char *word) {
     printf("checking if: %s, an opcode\n", word);
-    return 1;
+    if (!strcmp(word, "mov") || !strcmp(word, "cmp") || !strcmp(word, "add") || !strcmp(word, "sub") || !strcmp(word, "lea") || !strcmp(word, "clr") || !strcmp(word, "not") || !strcmp(word, "inc") || !strcmp(word, "dec") || !strcmp(word, "jmp") || !strcmp(word, "bne") || !strcmp(word, "red") || !strcmp(word, "prn") || !strcmp(word, "jsr") || !strcmp(word, "rts") || !strcmp(word, "stop"))
+        return 1;
+    return 0;
 }
 
 void handle_opcode(char *word, int *error) {
