@@ -3,8 +3,13 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <ctype.h>
+#include "first_pass.h"
+
+extern const char *error_messages[];
 
 int empty_line(char *line);
-void print_error(int error_num);
+void print_error(int error_num, int line);
+int check_macr(char *line_after_macr, int line_count, hash_table macros);
 
 #endif

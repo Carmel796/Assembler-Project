@@ -29,13 +29,4 @@ int is_opcode(char *word);
 void handle_opcode(char *word, int *error);
 void print_linked_list(node list);
 
-
-/* ERRORS:
- * 1: error in label name
- * 2: existing macro / symbol with the same name
- * 3: error in .data line arguments
- * 4: error in .string string
- * 5:
- */
-
 #endif

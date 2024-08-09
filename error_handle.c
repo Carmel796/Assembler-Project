@@ -1,15 +1,50 @@
 #include "error_handle.h"
 
-#include <ctype.h>
+const char *error_messages[] = {
+    "No error",    /* 0 - No error */
+    "label name does not match requirements",    /* -- 1 -- */
+    "existing macro / symbol with the same name",   /* -- 2 -- */
+    ".data line arguments",    /* --3 -- */
+    ".string given string",    /* -- 4 -- */
+    "not a saved word",    /* -- 5 -- */
+    "another word in 'endmacr' line",   /* -- 6 -- */
+    "macro call line has more chars after than the macro-call",    /* -- 7 -- */
+    "macro definition line is not non-whitespace characters after macro name",    /* -- 8 -- */
+};
 
 int empty_line(char *line){
-    while (*line != '\0') {
-        if (!isspace(*line)) return 0;
-        line++;
+    char copy[MAX_LINE];
+    int i = 0;
+    strcpy(copy, line);
+    while (copy[i] != '\0') {
+        if (!isspace(copy[i])) return 0;
+        i++;
     }
     return 1;
 }
 
-void print_error(int error_num) {
-    printf("error number: %d\n", error_num);
+void print_error(int error_number, int line_number) {
+    if (error_number < 0 || error_number >= sizeof(error_messages) / sizeof(error_messages[0])){
+        printf("Unknown error at line %d\n", line_number);
+    } else {
+        printf("Error at line %d: %s\n", line_number, error_messages[error_number]);
+    }
+}
+
+
+int check_macr(char *line_after_macr, int line_count, hash_table macros) {
+    char macro_name[MAX_LINE];
+    int offset = 0;
+    sscanf(line_after_macr, "%s%n", macro_name, &offset);
+
+    if (!empty_line(line_after_macr + offset)) {
+        print_error(8, line_count); /* macro definition line is not non-whitespace characters after macro name */
+        return 0;
+    }
+
+    if (search(macros, macro_name) != NULL || is_opcode(macro_name)) {
+        printf("*already macro with the same name || macro name is one of the 16 opcodes\n");
+        return 0;  /*already macro with the same name || macro name is one of the 16 opcodes*/
+    }
+    return 1;
 }

@@ -3,15 +3,14 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "linkedlist.h"
 #include "hashtable.h"
 #include "util.h"
+#include "error_handle.h"
 
 
 
 int macro_search(char *file_name, hash_table macros);
 char *get_macro_name(char *line_after_macr);
 void handle_macro(node *curr_line, char *line);
-int check_macr(char *line_after_macr, hash_table macros);
 
 #endif

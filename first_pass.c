@@ -22,6 +22,7 @@ void first_pass(char *am_file_name, hash_table symbols, hash_table macros) {
         symbol_flag = 0;
         offset = 0;
         total_offset = 0;
+        error = 0;
 
         /* gets first word of line into first_word, and first_word length into offset */
         if (!sscanf(line, "%s%n", word_buffer, &offset))
@@ -35,8 +36,8 @@ void first_pass(char *am_file_name, hash_table symbols, hash_table macros) {
         /* if label detected, and no error occur, symbol flag updating to True, symbol-name updating, and the "first_word" is now the second */
         if (is_label(word_buffer, &error, macros, symbols)) {
             if (error) {
-                print_error(error);
-                break;
+                print_error(error, line_index);
+                continue;
             }
 
             symbol_flag = 1;
@@ -53,7 +54,7 @@ void first_pass(char *am_file_name, hash_table symbols, hash_table macros) {
 
             /* distinguish between .data and .string, any errors will add to error variable */
             if (!strcmp(word_buffer, ".data")) {
-                sscanf(line + total_offset, "%s", word_buffer); /* this way im deleting leading white-spaces */
+                sscanf(line + total_offset, "%[^\n]", word_buffer); /* this way im deleting leading white-spaces */
                 handle_data(word_buffer, &error);
             } else {
                 sscanf(line + total_offset, "%s", word_buffer);
@@ -61,8 +62,7 @@ void first_pass(char *am_file_name, hash_table symbols, hash_table macros) {
             }
 
             if (error) {
-                print_error(error);
-                break;
+                print_error(error, line_index);
             }
             continue;
         }
@@ -76,8 +76,7 @@ void first_pass(char *am_file_name, hash_table symbols, hash_table macros) {
             }
 
             if (error) {
-                print_error(error);
-                break;
+                print_error(error, line_index);
             }
             continue;
         }
@@ -89,14 +88,13 @@ void first_pass(char *am_file_name, hash_table symbols, hash_table macros) {
             }
             handle_opcode(word_buffer, &error);
             if (error) {
-                print_error(error);
-                break;
+                print_error(error, line_index);
             }
             continue;
         }
 
         /* if got here no save word represent the first word of the line, need to exit */
-        break;
+        print_error(5, line_index);
     }
 
     fclose(am_file);
@@ -124,7 +122,6 @@ int is_label(char *name, int *error, hash_table macros, hash_table symbols) {
     }
 
     /* if got here, there is a symbol, with correct name, and no exiting macro / symbol with the same name */
-    printf("%s is a lable\n", name);
     return 1;
 }
 
@@ -174,14 +171,14 @@ void handle_data(char *arg, int *error) {
 }
 
 
-/* 1 2,3 */
+/* 6, -9,, */
 bool check_comma(const char *arg) {
     bool expect_comma = false;
     while (*arg != '\0') {
         if (isspace(*arg)) {
             arg++;
         } else if (*arg == ',') {
-            if (!expect_comma) return false;
+            if (empty_line((char *)arg+1) | !expect_comma) return false;
             expect_comma = false;
             arg++;
         } else {
