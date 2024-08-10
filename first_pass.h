@@ -43,5 +43,6 @@ void set_bit_to_one(short *src, int index);
 int check_operand(char *token);
 int check_register_name(char *name);
 int get_number_from_operand(char *token);
+int check_opcode_operand_type(int dest_flag, int index, int addressing_method, int *error);
 
 #endif

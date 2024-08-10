@@ -387,16 +387,22 @@ void handle_opcode(char *opcode, char *arg, int *error, hash_table symbols) {
             *error = 14;
             return;
         }
+
         if (token_count == 1) {
-            if (!is_all_zeros(opcode_array[index].legal_src, 4)) { /* this token is a source operand token */
+            if (!is_all_zeros(opcode_array[index].legal_src, 4)) { /* this token should refer as a source operand token */
+                if (!check_opcode_operand_type(source_or_dest, index, curr_addressing_method, error)) return;
                 set_bit_to_one(&inst_word, curr_addressing_method + 7);
             } else { /* there is only one token and it is the dest token */
-                set_bit_to_one(&inst_word, curr_addressing_method + 3);
                 source_or_dest = 1;
+                if (!check_opcode_operand_type(source_or_dest, index, curr_addressing_method, error)) return;
+                set_bit_to_one(&inst_word, curr_addressing_method + 3);
+
             }
         } else { /* this is the second operand, for sure its the dest */
-            set_bit_to_one(&inst_word, curr_addressing_method + 3);
             source_or_dest = 1;
+            if (!check_opcode_operand_type(source_or_dest, index, curr_addressing_method, error)) return;
+            set_bit_to_one(&inst_word, curr_addressing_method + 3);
+
         }
 
         if (token_count > get_arg_count(index)) {
@@ -483,6 +489,15 @@ int get_number_from_operand(char *token) {
 
     while (*copy != '#' && *copy != 'r') copy++;
     return atoi(copy+1);
+}
+
+int check_opcode_operand_type(int dest_flag, int index, int addressing_method, int *error) {
+    if ((!dest_flag && opcode_array[index].legal_src[addressing_method] == 0) || (dest_flag && opcode_array[index].legal_dst[addressing_method] == 0)) { /* the operand type does not match the opcode allowed types */
+        *error = 15;
+        return 0;
+    }
+
+    return 1;
 }
 
 

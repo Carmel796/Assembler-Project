@@ -16,6 +16,7 @@ const char *error_messages[] = {
     "one of the numbers of opcode line written incorrectly",    /* -- 12 -- */
     "too many / few arguments for this opcode",    /* -- 13 -- */
     "one or more operands are not declared currectly",    /* -- 14 -- */
+    "the operand type does not match the opcode allowed types", /* -- 15 -- */
 };
 
 int empty_line(char *line){

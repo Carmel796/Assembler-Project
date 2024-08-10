@@ -51,7 +51,6 @@ void fprint_linked_list(FILE *output, node list) {
 void free_list(node head, void (*free_value)(void *), int flag) {
     while (head != NULL) {
         node temp = head;
-        printf("freeing node: %s\n", head->key);
         if (head->key && flag) {
             free(head->key);
         }

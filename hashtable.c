@@ -36,13 +36,12 @@ void *search(const hash_table source,const char *key) {
 
 void free_table(hash_table src, int flag) {
     int i;
+    printf("--Freeing Table Memory--\n");
     for (i = 0; i < HASH_TABLE_SIZE; i++) {
         if (src[i] != NULL) {
             if (flag) {
-                printf("freeing macro table node\n");
                 free_list(src[i], free_nested_list, 1); /* 1: free key */
             } else {
-                printf("freeing symbols table node\n");
                 free_list(src[i], NULL, 0);
             }
         }
