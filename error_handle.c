@@ -2,7 +2,7 @@
 
 const char *error_messages[] = {
     "No error",    /* 0 - No error */
-    "label name does not match requirements",    /* -- 1 -- */
+    "symbol name does not match requirements",    /* -- 1 -- */
     "existing macro / symbol with the same name",   /* -- 2 -- */
     ".data line arguments",    /* --3 -- */
     ".string given string",    /* -- 4 -- */

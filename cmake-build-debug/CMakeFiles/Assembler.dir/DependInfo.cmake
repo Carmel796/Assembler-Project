@@ -14,6 +14,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/Users/frnkh/Documents/Assembler-Project/linkedlist.c" "CMakeFiles/Assembler.dir/linkedlist.c.obj" "gcc" "CMakeFiles/Assembler.dir/linkedlist.c.obj.d"
   "C:/Users/frnkh/Documents/Assembler-Project/main.c" "CMakeFiles/Assembler.dir/main.c.obj" "gcc" "CMakeFiles/Assembler.dir/main.c.obj.d"
   "C:/Users/frnkh/Documents/Assembler-Project/pre_proc.c" "CMakeFiles/Assembler.dir/pre_proc.c.obj" "gcc" "CMakeFiles/Assembler.dir/pre_proc.c.obj.d"
+  "C:/Users/frnkh/Documents/Assembler-Project/second_pass.c" "CMakeFiles/Assembler.dir/second_pass.c.obj" "gcc" "CMakeFiles/Assembler.dir/second_pass.c.obj.d"
   "C:/Users/frnkh/Documents/Assembler-Project/util.c" "CMakeFiles/Assembler.dir/util.c.obj" "gcc" "CMakeFiles/Assembler.dir/util.c.obj.d"
   )
 

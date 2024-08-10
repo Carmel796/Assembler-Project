@@ -6,6 +6,7 @@
 #include "pre_proc.h"
 #include "hashtable.h"
 #include "first_pass.h"
+#include "second_pass.h"
 
 
 #endif

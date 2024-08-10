@@ -18,7 +18,7 @@ typedef enum {
 } bool;
 
 struct symbol_value {
- int type; /* 0: data, 1: opcode, 2: external, 3: entry */
+ int type[4]; /* 0: data, 1: opcode, 2: external, 3: entry */
  int count; /* DC for data, IC for opcode */
 };
 

@@ -18,4 +18,6 @@ add_executable(Assembler main.c
         first_pass.h
         error_handle.c
         error_handle.h
+        second_pass.c
+        second_pass.h
 )

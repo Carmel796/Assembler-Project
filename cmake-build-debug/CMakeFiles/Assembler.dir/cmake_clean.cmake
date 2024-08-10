@@ -14,6 +14,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/Assembler.dir/main.c.obj.d"
   "CMakeFiles/Assembler.dir/pre_proc.c.obj"
   "CMakeFiles/Assembler.dir/pre_proc.c.obj.d"
+  "CMakeFiles/Assembler.dir/second_pass.c.obj"
+  "CMakeFiles/Assembler.dir/second_pass.c.obj.d"
   "CMakeFiles/Assembler.dir/util.c.obj"
   "CMakeFiles/Assembler.dir/util.c.obj.d"
   "libAssembler.dll.a"

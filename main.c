@@ -18,6 +18,10 @@ int main(int argc, char *argv[]) {
         
 
         printf("starting second pass\n");
+        if (!second_pass(argv[argc], symbols)) {
+            print_error(18, -1);
+            continue;
+        }
 
 
         free_table(macros, 1);

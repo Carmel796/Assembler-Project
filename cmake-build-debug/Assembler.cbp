@@ -114,6 +114,12 @@
 		<Unit filename="C:/Users/frnkh/Documents/Assembler-Project/pre_proc.h">
 			<Option target="Assembler"/>
 		</Unit>
+		<Unit filename="C:/Users/frnkh/Documents/Assembler-Project/second_pass.c">
+			<Option target="Assembler"/>
+		</Unit>
+		<Unit filename="C:/Users/frnkh/Documents/Assembler-Project/second_pass.h">
+			<Option target="Assembler"/>
+		</Unit>
 		<Unit filename="C:/Users/frnkh/Documents/Assembler-Project/util.c">
 			<Option target="Assembler"/>
 		</Unit>

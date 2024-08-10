@@ -272,6 +272,30 @@ pre_proc.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Assembler.dir\build.make CMakeFiles/Assembler.dir/pre_proc.c.s
 .PHONY : pre_proc.c.s
 
+second_pass.obj: second_pass.c.obj
+.PHONY : second_pass.obj
+
+# target to build an object file
+second_pass.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Assembler.dir\build.make CMakeFiles/Assembler.dir/second_pass.c.obj
+.PHONY : second_pass.c.obj
+
+second_pass.i: second_pass.c.i
+.PHONY : second_pass.i
+
+# target to preprocess a source file
+second_pass.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Assembler.dir\build.make CMakeFiles/Assembler.dir/second_pass.c.i
+.PHONY : second_pass.c.i
+
+second_pass.s: second_pass.c.s
+.PHONY : second_pass.s
+
+# target to generate assembly for a file
+second_pass.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Assembler.dir\build.make CMakeFiles/Assembler.dir/second_pass.c.s
+.PHONY : second_pass.c.s
+
 util.obj: util.c.obj
 .PHONY : util.obj
 
@@ -323,6 +347,9 @@ help:
 	@echo ... pre_proc.obj
 	@echo ... pre_proc.i
 	@echo ... pre_proc.s
+	@echo ... second_pass.obj
+	@echo ... second_pass.i
+	@echo ... second_pass.s
 	@echo ... util.obj
 	@echo ... util.i
 	@echo ... util.s

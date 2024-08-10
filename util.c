@@ -88,8 +88,8 @@ char *substring(const char* source, int start, int end) {
 
 int alpha_and_numeric_only_string(char *word) {
     while (*word) {
-        if (!isalpha(*word) && !isdigit(*word)) {
-            printf("the char '%c' is not alphabetic or numeric\n", *word);
+        if (!isalpha(*word) && !isdigit(*word) && !isspace(*word)) {
+            printf("the char %c is not alphabetic or numeric\n", *word);
             return 0;
         }
         word++;

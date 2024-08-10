@@ -161,7 +161,7 @@ int is_label(char *name, int *error, hash_table macros, hash_table symbols) {
     }
 
     /* if here, detected an ':', now need to check if the symbol name is OK */
-    if (!check_symbol_name(name)) {
+    if (!check_symbol_name(substring(name, 0, len-1))) {
         *error = 1; /* 1: error in label name */
         return 1; /* symbol, but error detected in symbol-name */
     }
@@ -178,16 +178,13 @@ int is_label(char *name, int *error, hash_table macros, hash_table symbols) {
 
 int check_symbol_name(char *name) {
     int len = strlen(name);
-    char *sub = NULL;
 
     /* checl the requirments of label name */
-    if (len > 31 || !isalpha(name[0]) || !alpha_and_numeric_only_string((sub = substring(name, 1, len-1)))){
-        free(sub);
+    if (len > 31 || !isalpha(name[0]) || !alpha_and_numeric_only_string(name)){
         return 0;
     }
 
     /* label name is fine and meets the requirments of label name */
-    free(sub);
     return 1;
 }
 
@@ -199,7 +196,7 @@ int add_symbol(hash_table symbols, char *key, int count, int flag) {
         return 0; /* existing symbol slreasy in symbols */
     }
 
-    value->type = flag;
+    value->type[flag] = 1; /* turning on the right flag */
     value->count = count;
 
     symbol = create_node(key, value);
@@ -358,6 +355,7 @@ int check_string(char *str, int *s_index, int *e_index) {
 /* HANDALING .EXTERN LINE */
 void handle_extern(hash_table symbols, const char *arg, int *error) {
     char copy[MAX_LINE], *token;
+    /* int arg_count = 0; */
 
     if (!check_comma(arg)) {
         *error = 16;
@@ -366,10 +364,20 @@ void handle_extern(hash_table symbols, const char *arg, int *error) {
 
     strcpy(copy, arg);
     token = strtok(copy, COMMA_DELIM);
-
+    while (isspace(*token)) token++;
     while (token != NULL) {
-        if (!add_symbol(symbols, token, DC, 0)) {
+        /*arg_count++;
+        if (arg_count != 1) {
+            *error = 13;
+            return;
+        }*/
+        if (!add_symbol(symbols, token, DC, 2)) {
             *error = 18;
+            return;
+        }
+        if (!check_symbol_name(token)) {
+            printf("token is: %s\n", token);
+            *error = 1;
             return;
         }
         token = strtok(NULL, COMMA_DELIM);
@@ -379,7 +387,29 @@ void handle_extern(hash_table symbols, const char *arg, int *error) {
 
 /* HANDALING .ENTRY LINE */
 void handle_entry(char *arg, int *error) {
+    char copy[MAX_LINE], *token;
+    /* int arg_count = 0; */
 
+    if (!check_comma(arg)) {
+        *error = 16;
+        return;
+    }
+
+    strcpy(copy, arg);
+    token = strtok(copy, COMMA_DELIM);
+    while (isspace(*token)) token++;
+    while (token != NULL) {
+        /*arg_count++;
+        if (arg_count != 1) {
+            *error = 13;
+            return;
+        }*/
+        if (!check_symbol_name(token)) {
+            *error = 1;
+            return;
+        }
+        token = strtok(NULL, COMMA_DELIM);
+    }
 }
 
 
@@ -407,12 +437,18 @@ void handle_opcode(char *opcode, const char *arg, int *error, hash_table symbols
         return;
     }
 
+
     token = strtok(copy, COMMA_DELIM);
     while (token != NULL) {
         /* initialization */
-        token_count++;
-        IC++; /* word of operand is about to be written, increasing IC from the first operand for saving ic_holder for the inst_word */
         curr_addressing_method = check_operand(token);
+
+        if (empty_line(token) && (!strcmp(opcode, "stop") || !strcmp(opcode, "rts"))) {
+            break;
+        }
+
+        IC++; /* word of operand is about to be written, increasing IC from the first operand for saving ic_holder for the inst_word */
+        token_count++;
 
         if (curr_addressing_method == -1) {
             *error = 14;
@@ -479,7 +515,8 @@ int check_operand(char *token) {
     int i = 0;
     strcpy(copy, token);
 
-    while (isspace(copy[i])) i++;
+    printf("checking operand: %s\n", token);
+    while (isspace(copy[i])) i++; /* increase token also outside of check_operand for skipping leading spaces */
 
     if (copy[i] == '#') {
         return check_data_num(token + i + 1) ? 0 : -1;
@@ -490,7 +527,7 @@ int check_operand(char *token) {
     if (copy[i] == 'r') {
         return check_register_name(token + i) ? 3 : -1;
     }
-    return 1; /* SHOULD I CHECK THAT IF OPERNAD IS SYMBOL - THAT THE SYMBOL NAME MEET THE REQUIRMENTS? */
+    return check_symbol_name(token + i) ? 1 : -1;
 }
 
 int check_register_name(char *name) {
@@ -504,6 +541,7 @@ int check_register_name(char *name) {
     i++;
     while (copy[i] != '\0') {
         if (!isspace(copy[i])) return 0;
+        i++;
     }
 
     return 1;
