@@ -10,6 +10,12 @@ const char *error_messages[] = {
     "another word in 'endmacr' line",   /* -- 6 -- */
     "macro call line has more chars after than the macro-call",    /* -- 7 -- */
     "macro definition line is not non-whitespace characters after macro name",    /* -- 8 -- */
+    "one of the numbers of .data line written incorrectly",    /* -- 9 -- */
+    "a label detected inside .extern or .entry line",    /* -- 10 -- */
+    "cannot find the opcode u searching for",    /* -- 11 -- */
+    "one of the numbers of opcode line written incorrectly",    /* -- 12 -- */
+    "too many / few arguments for this opcode",    /* -- 13 -- */
+    "one or more operands are not declared currectly",    /* -- 14 -- */
 };
 
 int empty_line(char *line){

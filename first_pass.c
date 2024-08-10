@@ -2,14 +2,35 @@
 
 int DC = 0;
 int IC = 0;
-struct symbol_value {
-    int type; /* 0: data, 1: opcode */
-    int count; /* DC for data, IC for opcode */
+short data_image[4096] = {0};
+short code_image[4096] = {0};
+
+
+
+
+struct instruction opcode_array[] = {
+    {"mov", 2, {1, 1, 1, 1}, {0, 1, 1, 1}},
+    {"cmp", 2, {1, 1, 1, 1}, {1, 1, 1, 1}},
+    {"add", 2, {1, 1, 1, 1}, {0, 1, 1, 1}},
+    {"sub", 2, {1, 1, 1, 1}, {0, 1, 1, 1}},
+    {"lea", 2, {0, 1, 0, 0}, {0, 1, 1, 1}},
+    {"clr", 1, {0, 0, 0, 0}, {0, 1, 1, 1}},
+    {"not", 1, {0, 0, 0, 0}, {0, 1, 1, 1}},
+    {"inc", 1, {0, 0, 0, 0}, {0, 1, 1, 1}},
+    {"dec", 1, {0, 0, 0, 0}, {0, 1, 1, 1}},
+    {"jmp", 1, {0, 0, 0, 0}, {0, 1, 1, 0}},
+    {"bne", 1, {0, 0, 0, 0}, {0, 1, 1, 0}},
+    {"red", 1, {0, 0, 0, 0}, {0, 1, 1, 1}},
+    {"prn", 1, {0, 0, 0, 0}, {1, 1, 1, 1}},
+    {"jsr", 1, {0, 0, 0, 0}, {0, 1, 1, 0}},
+    {"rts", 0, {0, 0, 0, 0}, {0, 0, 0, 0}},
+    {"stop", 0, {0, 0, 0, 0}, {0, 0, 0, 0}}
 };
 
+
 void first_pass(char *am_file_name, hash_table symbols, hash_table macros) {
-    char line[MAX_LINE] = {0}, word_buffer[MAX_LINE] = {0}, symbol_name[MAX_SYMBOL_LENGTH] = {0};
-    int error = 0, symbol_flag = 0, offset = 0, total_offset = 0, line_index = -1;
+    char line[MAX_LINE] = {0}, word_buffer[MAX_LINE] = {0}, symbol_name[MAX_SYMBOL_LENGTH] = {0}, opcode_temp[MAX_LINE] = {0};
+    int error = 0, symbol_flag = 0, offset = 0, total_offset = 0, line_index = -1, i;
     FILE *am_file = fopen_with_ending(am_file_name, ".am", "r");
 
 
@@ -17,8 +38,11 @@ void first_pass(char *am_file_name, hash_table symbols, hash_table macros) {
         printf("\n");
         line_index++;
         printf("inside line %d: %s", line_index, line);
+
         /* new initials for each line */
         symbol_name[0] = '\0';
+        word_buffer[0] = '\0';
+        opcode_temp[0] = '\0';
         symbol_flag = 0;
         offset = 0;
         total_offset = 0;
@@ -54,10 +78,10 @@ void first_pass(char *am_file_name, hash_table symbols, hash_table macros) {
 
             /* distinguish between .data and .string, any errors will add to error variable */
             if (!strcmp(word_buffer, ".data")) {
-                sscanf(line + total_offset, "%[^\n]", word_buffer); /* this way im deleting leading white-spaces */
+                sscanf(line + total_offset, "%[^\n]", word_buffer); /* now word_buffer contain the arguments of .data */
                 handle_data(word_buffer, &error);
             } else {
-                sscanf(line + total_offset, "%s", word_buffer);
+                sscanf(line + total_offset, "%[^\n]", word_buffer);
                 handle_string(word_buffer, &error);
             }
 
@@ -68,6 +92,9 @@ void first_pass(char *am_file_name, hash_table symbols, hash_table macros) {
         }
 
         if (!strcmp(word_buffer, ".extern") || !strcmp(word_buffer, ".entry")) {
+            if (symbol_flag) {
+                print_error(10, line_index);
+            }
             /* distinguish between .data and .string, any errors will add to error variable */
             if (!strcmp(word_buffer, ".extern")) {
                 handle_extern(line + offset, &error);
@@ -86,7 +113,9 @@ void first_pass(char *am_file_name, hash_table symbols, hash_table macros) {
                 printf("adding symbol: %s to symbol table\n", symbol_name);
                 add_symbol(symbols, symbol_name, IC, 1);
             }
-            handle_opcode(word_buffer, &error);
+            strcpy(opcode_temp, word_buffer);
+            sscanf(line + total_offset, "%[^\n]", word_buffer);
+            handle_opcode(opcode_temp, word_buffer, &error, symbols);
             if (error) {
                 print_error(error, line_index);
             }
@@ -97,6 +126,17 @@ void first_pass(char *am_file_name, hash_table symbols, hash_table macros) {
         print_error(5, line_index);
     }
 
+    printf("Printing Data-Image:\n");
+    for (i = 0; i < DC; i++) {
+        printf("array[%d] = ", i);
+        print_binary(data_image[i]);
+    }
+
+    printf("Printing Code-Image:\n");
+    for (i = 0; i < IC; i++) {
+        printf("array[%d] = ", i);
+        print_binary(code_image[i]);
+    }
     fclose(am_file);
 }
 
@@ -154,6 +194,8 @@ void add_symbol(hash_table symbols, char *key, int count, int flag) {
 /* HANDALING .DATA LINE */
 void handle_data(char *arg, int *error) {
     char copy[MAX_LINE] = {0}, *token = NULL;
+    short bin_num = 0;
+    int number;
     if (!check_comma(arg)) {
         *error = 3; /* 3: error in .data line arguments */
         return;
@@ -161,17 +203,290 @@ void handle_data(char *arg, int *error) {
 
     /* arguments of .data are valid, need to code them into memory */
     strcpy(copy, arg);
-    token = strtok(copy, ",");
+    token = strtok(copy, COMMA_DELIM);
 
     while (token != NULL) {
         /* Process token here */
+        if (!check_data_num(token)) {
+            *error = 9;
+            break;
+        }
 
-        token = strtok(NULL, ",");
+        number = strtol(token, NULL, 10);
+        int_to_binary(number, &bin_num);
+        data_image[DC] = bin_num;
+        DC++;
+        token = strtok(NULL, COMMA_DELIM);
     }
 }
 
+int check_data_num(char *num) {
+    /* Define a buffer to hold the copied string, with space for null terminator */
+    char copy[83], *start = NULL, *end = NULL;
 
-/* 6, -9,, */
+    /* Copy the original string to the buffer */
+    strcpy(copy, num);
+    start = copy;
+
+    /* Skip leading whitespace */
+    while (isspace((unsigned char)*start)) {
+        start++;
+    }
+
+    /* If after skipping whitespaces the string is empty */
+    if (*start == '\0') {
+        return 0;  /* Invalid number */
+    }
+
+    /* Find the end of the string */
+    end = start + strlen(start) - 1;
+
+    /* Skip trailing whitespace */
+    while (end > start && isspace((unsigned char)*end)) {
+        *end = '\0';
+        end--;
+    }
+
+    /* Check if the string starts with a '+' or '-' sign */
+    if (*start == '+' || *start == '-') {
+        start++;  /* Move to the next character */
+    }
+
+    /* Check if the string is now empty after a sign */
+    if (*start == '\0') {
+        return 0;  /* Invalid number (just a sign with no digits) */
+    }
+
+    /* Traverse the rest of the string and ensure all characters are digits */
+    while (*start != '\0') {
+        if (!isdigit((unsigned char)*start)) {
+            return 0;  /* Invalid character found */
+        }
+        start++;
+    }
+
+    return 1;  /* The string is a valid number */
+}
+
+
+/* HANDALING .STRING LINE */
+void handle_string(char *str, int *error) {
+    char copy[MAX_LINE] = {0};
+    int start = 0, end = 0;
+    if (!check_string(str, &start, &end)) {
+        *error = 4; /* 4: error in .string string */
+        return;
+    }
+
+    /* if got here string is valid, need to code each char into memory */
+    strcpy(copy, str);
+
+    for (;start <= end; start++) {
+        data_image[DC] = copy[start];
+        DC++;
+    }
+
+    /* Indication of string end */
+    data_image[DC] = '\0';
+    DC++;
+}
+
+/* s_index: start index, e_index: end index */
+
+int check_string(char *str, int *s_index, int *e_index) {
+    /* Define a buffer to hold the copied string, with space for null terminator AND Pointers to traverse the copied string */
+    char copy[83], *p, *start, *end;
+
+    /* Copy the original string to the buffer */
+    strcpy(copy, str);
+
+    /* Initialize pointers */
+    start = copy;
+    end = copy + strlen(copy) - 1;
+
+    /* Skip leading whitespace */
+    while (isspace((unsigned char)*start)) {
+        start++;
+    }
+
+    /* If the string is too short to have quotes or is empty */
+    if (*start == '\0' || strlen(start) < 2) {
+        return 0;  /* Invalid string */
+    }
+
+    /* Skip trailing whitespace */
+    while (end > start && isspace((unsigned char)*end)) {
+        end--;
+    }
+
+    /* Check if the string starts and ends with double quotes */
+    if (*start != '\"' || *end != '\"') {
+        return 0;  /* Invalid string */
+    }
+
+    /* Store the start and end indices (excluding the quotes) */
+    *s_index = (start - copy) + 1;  /* Index of the first character inside the quotes */
+    *e_index = (end - copy) - 1;    /* Index of the last character inside the quotes */
+
+    /* Traverse the characters between the quotes */
+    for (p = start + 1; p < end; p++) {
+        if (!isprint((unsigned char)*p)) {
+            return 0;  /* Invalid character found */
+        }
+    }
+
+    return 1;  /* The string is valid */
+}
+
+/* HANDALING .EXTERN LINE */
+void handle_extern(char *word, int *error) {
+    printf("in handle_extern() function\n");
+}
+
+
+/* HANDALING .ENTRY LINE */
+void handle_entry(char *word, int *error) {
+    printf("in handle_entry() function\n");
+}
+
+
+/* HANDALING OPCODE LINE */
+int is_opcode(char *word) {
+    printf("checking if: %s, an opcode\n", word);
+    return linear_search(opcode_array, OPCODE_ARRAY_SIZE, word) != -1 ? 1 : 0;
+}
+
+void handle_opcode(char *opcode, char *arg, int *error, hash_table symbols) {
+    short inst_word = 0;
+    int index = linear_search(opcode_array, OPCODE_ARRAY_SIZE, opcode), token_count = 0, curr_addressing_method = 0, ic_holder = IC, source_or_dest = 0;
+    char copy[MAX_LINE], *token = NULL;
+
+
+    if (!check_comma(arg)) {
+        *error = 12;
+        return;
+    }
+
+    strcpy(copy, arg);
+    printf("in handle_opcode() function\n");
+    if (index != -1) {
+        inst_word = index << 11;
+    } else {
+        *error = 11;
+        return;
+    }
+
+    token = strtok(copy, COMMA_DELIM);
+    while (token != NULL) {
+        /* initialization */
+        token_count++;
+        IC++; /* word of operand is about to be written, increasing IC from the first operand for saving ic_holder for the inst_word */
+        curr_addressing_method = check_operand(token);
+
+        if (curr_addressing_method == -1) {
+            *error = 14;
+            return;
+        }
+        if (token_count == 1) {
+            if (!is_all_zeros(opcode_array[index].legal_src, 4)) { /* this token is a source operand token */
+                set_bit_to_one(&inst_word, curr_addressing_method + 7);
+            } else { /* there is only one token and it is the dest token */
+                set_bit_to_one(&inst_word, curr_addressing_method + 3);
+                source_or_dest = 1;
+            }
+        } else { /* this is the second operand, for sure its the dest */
+            set_bit_to_one(&inst_word, curr_addressing_method + 3);
+            source_or_dest = 1;
+        }
+
+        if (token_count > get_arg_count(index)) {
+            *error = 13;
+            return;
+        }
+        printf("argument %d for opcode %s is: %s\n", token_count, opcode, token);
+
+        /* insert into word in bits 10-7 source operand addressing, in 6-3 target operand addressing, in 2-0 the 'A', 'R', 'E' */
+        if (curr_addressing_method == 0) { /* curr_addressing_method == 0 means its a number */
+            code_image[IC] = get_number_from_operand(token) << 3;
+            set_bit_to_one(&code_image[IC], 2);
+        }
+        else if (curr_addressing_method == 1) {
+            code_image[IC] = 0; /* probably a label that defined later in code */
+        }
+        else { /* curr_addressing_method == 2 or 3 means its a register */
+            if (source_or_dest) {
+                code_image[IC] = get_number_from_operand(token) << 6;
+            } else {
+                code_image[IC] = get_number_from_operand(token) << 3;
+            }
+            set_bit_to_one(&code_image[IC], 2);
+        }
+
+        print_binary(code_image[IC]);
+
+        token = strtok(NULL, COMMA_DELIM);
+    }
+    if (token_count != get_arg_count(index)) {
+        *error = 13;
+        return;
+    }
+    set_bit_to_one(&inst_word, 2); /* 'ARE' of instruction line is alwats A */
+    code_image[ic_holder] = inst_word;
+    print_binary(inst_word);
+
+    IC++; /* if IC not increased here, next line will overwrite the last operand word of this line */
+}
+
+
+void set_bit_to_one(short *src, int index) {
+    *src = *src | 1 << index;
+}
+
+int check_operand(char *token) {
+    char copy[MAX_LINE];
+    int i = 0;
+    strcpy(copy, token);
+
+    while (isspace(copy[i])) i++;
+
+    if (copy[i] == '#') {
+        return check_data_num(token + i + 1) ? 0 : -1;
+    }
+    if (copy[i] == '*') {
+        return check_register_name(token + i + 1) ? 2 : -1;
+    }
+    if (copy[i] == 'r') {
+        return check_register_name(token + i) ? 3 : -1;
+    }
+    return 1; /* SHOULD I CHECK THAT IF OPERNAD IS SYMBOL - THAT THE SYMBOL NAME MEET THE REQUIRMENTS? */
+}
+
+int check_register_name(char *name) {
+    char copy[MAX_LINE];
+    int i = 0;
+    strcpy(copy, name);
+
+    if (copy[i] != 'r') return 0;
+    i++;
+    if (copy[i] != '0' && copy[i] != '1' && copy[i] != '2' && copy[i] != '3' && copy[i] != '4' && copy[i] != '5' && copy[i] != '6' && copy[i] != '7') return 0;
+    i++;
+    while (copy[i] != '\0') {
+        if (!isspace(copy[i])) return 0;
+    }
+
+    return 1;
+}
+
+int get_number_from_operand(char *token) {
+    char *copy = token;
+    strcpy(copy, token);
+
+    while (*copy != '#' && *copy != 'r') copy++;
+    return atoi(copy+1);
+}
+
+
+/* MULTIPLE-USE FUNCTIONS */
 bool check_comma(const char *arg) {
     bool expect_comma = false;
     while (*arg != '\0') {
@@ -192,74 +507,7 @@ bool check_comma(const char *arg) {
     return true;
 }
 
-
-/* HANDALING .STRING LINE */
-void handle_string(char *str, int *error) {
-    char copy[MAX_LINE] = {0}, *token = NULL;
-    if (!check_string(str)) {
-        *error = 4; /* 4: error in .string string */
-        return;
-    }
-
-    /* if got here string is valid, need to code each char into memory */
-    strcpy(copy, str);
-    token = strtok(copy, ",");
-
-    while (token != NULL) {
-        /* Process token here */
-
-        token = strtok(NULL, ",");
-    }
-}
-
-
-int check_string(char *str) {
-    size_t length = strlen(str);
-    size_t i;
-
-    /* Check if the string is at least 2 characters long */
-    if (length < 2) {
-        printf("string '%s' is too short", str);
-        return 0;
-    }  /* Too short to have leading and trailing quotes */
-
-    /* Check leading and trailing quotation marks */
-    if (str[0] != '"' || str[length - 1] != '"') {
-        printf("%s does not have open/close quotation mark\n", substring(str, 0, length-1));
-        return 0;
-    }
-
-    /* Check if every character in between is printable */
-    for (i = 1; i < length - 1; i++) {
-        if (!isprint((unsigned char)str[i])) {
-            printf("the char '%c' inside the string '%s' is not printable by the isprint() func", str[i], str);
-            return 0;
-        }
-    }
-
-    return 1;  /* String is valid */
-}
-
-
-/* HANDALING .EXTERN LINE */
-void handle_extern(char *word, int *error) {
-    printf("in handle_extern() function\n");
-}
-
-/* HANDALING .ENTRY LINE */
-void handle_entry(char *word, int *error) {
-    printf("in handle_entry() function\n");
-}
-
-/* HANDALING OPCODE LINE */
-int is_opcode(char *word) {
-    printf("checking if: %s, an opcode\n", word);
-    if (!strcmp(word, "mov") || !strcmp(word, "cmp") || !strcmp(word, "add") || !strcmp(word, "sub") || !strcmp(word, "lea") || !strcmp(word, "clr") || !strcmp(word, "not") || !strcmp(word, "inc") || !strcmp(word, "dec") || !strcmp(word, "jmp") || !strcmp(word, "bne") || !strcmp(word, "red") || !strcmp(word, "prn") || !strcmp(word, "jsr") || !strcmp(word, "rts") || !strcmp(word, "stop"))
-        return 1;
-    return 0;
-}
-
-void handle_opcode(char *word, int *error) {
-    printf("in handle_opcode() function\n");
+int get_arg_count(int opcode_index) {
+    return opcode_array[opcode_index].arg_count;
 }
 

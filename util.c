@@ -1,5 +1,8 @@
 #include "util.h"
 
+
+
+
 FILE *fopen_with_ending(const char *source_file_name, const char *ending, const char *mode) {
     char *file_name = create_file_name_with_ending(source_file_name, ending);
     FILE *fp = NULL;
@@ -86,7 +89,7 @@ char *substring(const char* source, int start, int end) {
 int alpha_and_numeric_only_string(char *word) {
     while (*word) {
         if (!isalpha(*word) && !isdigit(*word)) {
-            printf("the word '%s' is no only alphabetic or numeric\n", word);
+            printf("the char '%c' is not alphabetic or numeric\n", *word);
             return 0;
         }
         word++;
@@ -94,3 +97,42 @@ int alpha_and_numeric_only_string(char *word) {
     return 1;
 }
 
+
+void int_to_binary(int value, short *binary) {
+    int i;
+    *binary = 0;
+    for (i = 0; i < sizeof(short) * 8; i++) {
+        if (value & (1 << i)) {
+            *binary |= (1 << i);
+        }
+    }
+}
+
+void print_binary(short value) {
+    int bit_size = sizeof(short) * 8, i;
+
+    for (i = bit_size - 1; i >= 0; i--) {
+        printf("%d", (value >> i) & 1);
+    }
+    printf(" = %d\n", value);
+}
+
+int linear_search(struct instruction arr[], int size, const char *target) {
+    int i;
+    for (i = 0; i < size; i++) {
+        if (strcmp(arr[i].name, target) == 0) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+int is_all_zeros(int arr[], int size) {
+    int i;
+    for (i = 0; i < size; i++) {
+        if (arr[i] != 0) {
+            return 0;
+        }
+    }
+    return 1;
+}
