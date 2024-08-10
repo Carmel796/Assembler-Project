@@ -6,8 +6,6 @@ short data_image[4096] = {0};
 short code_image[4096] = {0};
 
 
-
-
 struct instruction opcode_array[] = {
     {"mov", 2, {1, 1, 1, 1}, {0, 1, 1, 1}},
     {"cmp", 2, {1, 1, 1, 1}, {1, 1, 1, 1}},
@@ -28,7 +26,7 @@ struct instruction opcode_array[] = {
 };
 
 
-void first_pass(char *am_file_name, hash_table symbols, hash_table macros) {
+void first_pass(const char *am_file_name, hash_table symbols, hash_table macros) {
     char line[MAX_LINE] = {0}, word_buffer[MAX_LINE] = {0}, symbol_name[MAX_SYMBOL_LENGTH] = {0}, opcode_temp[MAX_LINE] = {0};
     int error = 0, symbol_flag = 0, offset = 0, total_offset = 0, line_index = -1, i;
     FILE *am_file = fopen_with_ending(am_file_name, ".am", "r");
@@ -37,7 +35,7 @@ void first_pass(char *am_file_name, hash_table symbols, hash_table macros) {
     while (fgets(line, MAX_LINE, am_file)) {
         printf("\n");
         line_index++;
-        printf("inside line %d: %s", line_index, line);
+        printf("(line %d): %s", line_index, line);
 
         /* new initials for each line */
         symbol_name[0] = '\0';
@@ -55,7 +53,7 @@ void first_pass(char *am_file_name, hash_table symbols, hash_table macros) {
 
         total_offset += offset;
 
-        printf("first word of line %d: %s\n", line_index, word_buffer);
+        /*printf("first word of line %d: %s\n", line_index, word_buffer);*/
 
         /* if label detected, and no error occur, symbol flag updating to True, symbol-name updating, and the "first_word" is now the second */
         if (is_label(word_buffer, &error, macros, symbols)) {
@@ -114,6 +112,7 @@ void first_pass(char *am_file_name, hash_table symbols, hash_table macros) {
                 add_symbol(symbols, symbol_name, IC, 1);
             }
             strcpy(opcode_temp, word_buffer);
+            word_buffer[0] = '\0'; /* reset word buffer */
             sscanf(line + total_offset, "%[^\n]", word_buffer);
             handle_opcode(opcode_temp, word_buffer, &error, symbols);
             if (error) {
@@ -352,15 +351,13 @@ void handle_entry(char *word, int *error) {
 
 /* HANDALING OPCODE LINE */
 int is_opcode(char *word) {
-    printf("checking if: %s, an opcode\n", word);
     return linear_search(opcode_array, OPCODE_ARRAY_SIZE, word) != -1 ? 1 : 0;
 }
 
-void handle_opcode(char *opcode, char *arg, int *error, hash_table symbols) {
+void handle_opcode(char *opcode, const char *arg, int *error, hash_table symbols) {
     short inst_word = 0;
     int index = linear_search(opcode_array, OPCODE_ARRAY_SIZE, opcode), token_count = 0, curr_addressing_method = 0, ic_holder = IC, source_or_dest = 0;
     char copy[MAX_LINE], *token = NULL;
-
 
     if (!check_comma(arg)) {
         *error = 12;
@@ -409,7 +406,6 @@ void handle_opcode(char *opcode, char *arg, int *error, hash_table symbols) {
             *error = 13;
             return;
         }
-        printf("argument %d for opcode %s is: %s\n", token_count, opcode, token);
 
         /* insert into word in bits 10-7 source operand addressing, in 6-3 target operand addressing, in 2-0 the 'A', 'R', 'E' */
         if (curr_addressing_method == 0) { /* curr_addressing_method == 0 means its a number */
@@ -428,8 +424,6 @@ void handle_opcode(char *opcode, char *arg, int *error, hash_table symbols) {
             set_bit_to_one(&code_image[IC], 2);
         }
 
-        print_binary(code_image[IC]);
-
         token = strtok(NULL, COMMA_DELIM);
     }
     if (token_count != get_arg_count(index)) {
@@ -438,8 +432,6 @@ void handle_opcode(char *opcode, char *arg, int *error, hash_table symbols) {
     }
     set_bit_to_one(&inst_word, 2); /* 'ARE' of instruction line is alwats A */
     code_image[ic_holder] = inst_word;
-    print_binary(inst_word);
-
     IC++; /* if IC not increased here, next line will overwrite the last operand word of this line */
 }
 
