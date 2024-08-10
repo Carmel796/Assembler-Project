@@ -26,9 +26,9 @@ struct instruction opcode_array[] = {
 };
 
 
-void first_pass(const char *am_file_name, hash_table symbols, hash_table macros) {
+int first_pass(const char *am_file_name, hash_table symbols, hash_table macros) {
     char line[MAX_LINE] = {0}, word_buffer[MAX_LINE] = {0}, symbol_name[MAX_SYMBOL_LENGTH] = {0}, opcode_temp[MAX_LINE] = {0};
-    int error = 0, symbol_flag = 0, offset = 0, total_offset = 0, line_index = -1, i;
+    int error_flag = 0, error = 0, symbol_flag = 0, offset = 0, total_offset = 0, line_index = -1, i;
     FILE *am_file = fopen_with_ending(am_file_name, ".am", "r");
 
 
@@ -59,6 +59,7 @@ void first_pass(const char *am_file_name, hash_table symbols, hash_table macros)
         if (is_label(word_buffer, &error, macros, symbols)) {
             if (error) {
                 print_error(error, line_index);
+                error_flag = 1;
                 continue;
             }
 
@@ -70,8 +71,9 @@ void first_pass(const char *am_file_name, hash_table symbols, hash_table macros)
 
         if (!strcmp(word_buffer, ".data") || !strcmp(word_buffer, ".string")) {
             if (symbol_flag) {
-                printf("adding symbol: %s to symbol table\n", symbol_name);
-                add_symbol(symbols, symbol_name, DC, 0);
+                if (!add_symbol(symbols, symbol_name, DC, 0)) {
+                    print_error(18, line_index);
+                }
             }
 
             /* distinguish between .data and .string, any errors will add to error variable */
@@ -84,6 +86,7 @@ void first_pass(const char *am_file_name, hash_table symbols, hash_table macros)
             }
 
             if (error) {
+                error_flag = 1;
                 print_error(error, line_index);
             }
             continue;
@@ -95,12 +98,15 @@ void first_pass(const char *am_file_name, hash_table symbols, hash_table macros)
             }
             /* distinguish between .data and .string, any errors will add to error variable */
             if (!strcmp(word_buffer, ".extern")) {
-                handle_extern(line + offset, &error);
+                sscanf(line + total_offset, "%[^\n]", word_buffer);
+                handle_extern(symbols, word_buffer, &error);
             } else {
+                sscanf(line + total_offset, "%[^\n]", word_buffer);
                 handle_entry(line + offset, &error);
             }
 
             if (error) {
+                error_flag = 1;
                 print_error(error, line_index);
             }
             continue;
@@ -109,19 +115,23 @@ void first_pass(const char *am_file_name, hash_table symbols, hash_table macros)
         if (is_opcode(word_buffer)) {
             if (symbol_flag) {
                 printf("adding symbol: %s to symbol table\n", symbol_name);
-                add_symbol(symbols, symbol_name, IC, 1);
+                if (!add_symbol(symbols, symbol_name, DC, 0)) {
+                    print_error(18, line_index);
+                }
             }
             strcpy(opcode_temp, word_buffer);
             word_buffer[0] = '\0'; /* reset word buffer */
             sscanf(line + total_offset, "%[^\n]", word_buffer);
             handle_opcode(opcode_temp, word_buffer, &error, symbols);
             if (error) {
+                error_flag = 1;
                 print_error(error, line_index);
             }
             continue;
         }
 
         /* if got here no save word represent the first word of the line, need to exit */
+        error_flag = 1;
         print_error(5, line_index);
     }
 
@@ -137,6 +147,8 @@ void first_pass(const char *am_file_name, hash_table symbols, hash_table macros)
         print_binary(code_image[i]);
     }
     fclose(am_file);
+
+    return !error_flag; /* error flag is 1 if in any point of the first pass an error occur, otherwise 0 */
 }
 
 /* HANDALING SYMBOL IN LINE */
@@ -179,14 +191,20 @@ int check_symbol_name(char *name) {
     return 1;
 }
 
-void add_symbol(hash_table symbols, char *key, int count, int flag) {
+int add_symbol(hash_table symbols, char *key, int count, int flag) {
     node symbol;
     struct symbol_value *value = safe_malloc(sizeof(struct symbol_value));
+    if (search(symbols, key)) {
+        free(value);
+        return 0; /* existing symbol slreasy in symbols */
+    }
+
     value->type = flag;
     value->count = count;
 
     symbol = create_node(key, value);
     insert(symbols, symbol);
+    return 1; /* success */
 }
 
 
@@ -338,14 +356,30 @@ int check_string(char *str, int *s_index, int *e_index) {
 }
 
 /* HANDALING .EXTERN LINE */
-void handle_extern(char *word, int *error) {
-    printf("in handle_extern() function\n");
+void handle_extern(hash_table symbols, const char *arg, int *error) {
+    char copy[MAX_LINE], *token;
+
+    if (!check_comma(arg)) {
+        *error = 16;
+        return;
+    }
+
+    strcpy(copy, arg);
+    token = strtok(copy, COMMA_DELIM);
+
+    while (token != NULL) {
+        if (!add_symbol(symbols, token, DC, 0)) {
+            *error = 18;
+            return;
+        }
+        token = strtok(NULL, COMMA_DELIM);
+    }
 }
 
 
 /* HANDALING .ENTRY LINE */
-void handle_entry(char *word, int *error) {
-    printf("in handle_entry() function\n");
+void handle_entry(char *arg, int *error) {
+
 }
 
 

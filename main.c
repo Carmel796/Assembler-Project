@@ -11,7 +11,10 @@ int main(int argc, char *argv[]) {
         }
 
         printf("starting first pass\n");
-        first_pass(argv[argc], symbols, macros);
+        if (!first_pass(argv[argc], symbols, macros)) { /* if an error occur in first_pass, should move to next file */
+            print_error(17, -1);
+            continue;
+        }
         
 
         printf("starting second pass\n");
