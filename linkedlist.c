@@ -93,3 +93,7 @@ void set_next(node curr, node next) {
 void *get_value(node curr) {
     return curr != NULL ? curr->value: NULL;
 }
+
+void set_value(node curr, void *value) {
+    curr->value = value;
+}

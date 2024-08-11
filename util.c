@@ -136,3 +136,16 @@ int is_all_zeros(int arr[], int size) {
     }
     return 1;
 }
+
+void print_array(const int arr[], int size) {
+    int i;
+
+    printf("[");
+    for (i = 0; i < size; i++) {
+        printf("%d", arr[i]);
+        if (i < size - 1) {
+            printf(", ");
+        }
+    }
+    printf("]");
+}

@@ -19,5 +19,6 @@ void set_next(node curr, node next);
 void *get_value(node curr);
 void free_list(node head, void (*free_value)(void *), int flag);
 void free_nested_list(void *value);
+void set_value(node curr, void *value);
 
 #endif

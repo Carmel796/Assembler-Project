@@ -115,7 +115,7 @@ int first_pass(const char *am_file_name, hash_table symbols, hash_table macros) 
         if (is_opcode(word_buffer)) {
             if (symbol_flag) {
                 printf("adding symbol: %s to symbol table\n", symbol_name);
-                if (!add_symbol(symbols, symbol_name, DC, 0)) {
+                if (!add_symbol(symbols, symbol_name, IC, 1)) {
                     print_error(18, line_index);
                 }
             }
@@ -191,16 +191,22 @@ int check_symbol_name(char *name) {
 int add_symbol(hash_table symbols, char *key, int count, int flag) {
     node symbol;
     struct symbol_value *value = safe_malloc(sizeof(struct symbol_value));
-    if (search(symbols, key)) {
+    if (search(symbols, substring(key, 0, strlen(key)-1))) {
         free(value);
         return 0; /* existing symbol slreasy in symbols */
     }
 
+    value->type[0] = 0;
+    value->type[1] = 0;
+    value->type[2] = 0;
+    value->type[3] = 0;
     value->type[flag] = 1; /* turning on the right flag */
+    print_array(value->type, 4);
     value->count = count;
 
-    symbol = create_node(key, value);
+    symbol = create_node(substring(key, 0, strlen(key)-1), value);
     insert(symbols, symbol);
+
     return 1; /* success */
 }
 
@@ -355,7 +361,7 @@ int check_string(char *str, int *s_index, int *e_index) {
 /* HANDALING .EXTERN LINE */
 void handle_extern(hash_table symbols, const char *arg, int *error) {
     char copy[MAX_LINE], *token;
-    /* int arg_count = 0; */
+    int arg_count = 0;
 
     if (!check_comma(arg)) {
         *error = 16;
@@ -366,11 +372,11 @@ void handle_extern(hash_table symbols, const char *arg, int *error) {
     token = strtok(copy, COMMA_DELIM);
     while (isspace(*token)) token++;
     while (token != NULL) {
-        /*arg_count++;
+        arg_count++;
         if (arg_count != 1) {
             *error = 13;
             return;
-        }*/
+        }
         if (!add_symbol(symbols, token, DC, 2)) {
             *error = 18;
             return;
@@ -388,7 +394,7 @@ void handle_extern(hash_table symbols, const char *arg, int *error) {
 /* HANDALING .ENTRY LINE */
 void handle_entry(char *arg, int *error) {
     char copy[MAX_LINE], *token;
-    /* int arg_count = 0; */
+    int arg_count = 0;
 
     if (!check_comma(arg)) {
         *error = 16;
@@ -399,11 +405,11 @@ void handle_entry(char *arg, int *error) {
     token = strtok(copy, COMMA_DELIM);
     while (isspace(*token)) token++;
     while (token != NULL) {
-        /*arg_count++;
+        arg_count++;
         if (arg_count != 1) {
             *error = 13;
             return;
-        }*/
+        }
         if (!check_symbol_name(token)) {
             *error = 1;
             return;

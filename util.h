@@ -26,5 +26,6 @@ void int_to_binary(int value, short *binary);
 void print_binary(short value);
 int linear_search(struct instruction arr[], int size, const char *target);
 int is_all_zeros(int arr[], int size);
+void print_array(const int arr[], int size);
 
 #endif

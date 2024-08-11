@@ -20,6 +20,7 @@ const char *error_messages[] = {
     "commas for this line are set incorrectly", /* -- 16 -- */
     "one or more errors occur in first-pass, moving to next file", /* -- 17 -- */
     "existing symbol already in symbols", /* -- 18 -- */
+    "symbol was not found in symbol table", /* -- 19 -- */
 };
 
 int empty_line(char *line){
