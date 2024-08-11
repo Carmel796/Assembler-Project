@@ -36,7 +36,7 @@ int check_string(char *str, int *s_index, int *e_index);
 void handle_extern(hash_table symbols, const char *arg, int *error);
 void handle_entry(char *arg, int *error);
 int is_opcode(char *word);
-void handle_opcode(char *opcode, const char *arg, int *error, hash_table symbols);
+void handle_opcode(char *opcode, const char *arg, int *error);
 int check_data_num(char *str);
 int get_arg_count(int opcode_index);
 void set_bit_to_one(short *src, int index);

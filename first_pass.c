@@ -64,7 +64,7 @@ int first_pass(const char *am_file_name, hash_table symbols, hash_table macros) 
             }
 
             symbol_flag = 1;
-            strcpy(symbol_name, word_buffer);
+            strcpy(symbol_name, substring(word_buffer, 0, offset-1));
             sscanf(line + total_offset, "%s%n", word_buffer, &offset);
             total_offset += offset;
         }
@@ -114,7 +114,7 @@ int first_pass(const char *am_file_name, hash_table symbols, hash_table macros) 
 
         if (is_opcode(word_buffer)) {
             if (symbol_flag) {
-                printf("adding symbol: %s to symbol table\n", symbol_name);
+                printf("adding symbol: %s to symbol table with value: %d\n", symbol_name, IC);
                 if (!add_symbol(symbols, symbol_name, IC, 1)) {
                     print_error(18, line_index);
                 }
@@ -122,7 +122,7 @@ int first_pass(const char *am_file_name, hash_table symbols, hash_table macros) 
             strcpy(opcode_temp, word_buffer);
             word_buffer[0] = '\0'; /* reset word buffer */
             sscanf(line + total_offset, "%[^\n]", word_buffer);
-            handle_opcode(opcode_temp, word_buffer, &error, symbols);
+            handle_opcode(opcode_temp, word_buffer, &error);
             if (error) {
                 error_flag = 1;
                 print_error(error, line_index);
@@ -135,14 +135,19 @@ int first_pass(const char *am_file_name, hash_table symbols, hash_table macros) 
         print_error(5, line_index);
     }
 
+
+    update_data_values(symbols, IC);
+    IC--; /* IC (/ DC) finish the first pass with the next empty memory place, we want the last used memory place */
+    DC--;
+
     printf("Printing Data-Image:\n");
-    for (i = 0; i < DC; i++) {
+    for (i = 0; i <= DC; i++) {
         printf("array[%d] = ", i);
         print_binary(data_image[i]);
     }
 
     printf("Printing Code-Image:\n");
-    for (i = 0; i < IC; i++) {
+    for (i = 0; i <= IC; i++) {
         printf("array[%d] = ", i);
         print_binary(code_image[i]);
     }
@@ -191,7 +196,8 @@ int check_symbol_name(char *name) {
 int add_symbol(hash_table symbols, char *key, int count, int flag) {
     node symbol;
     struct symbol_value *value = safe_malloc(sizeof(struct symbol_value));
-    if (search(symbols, substring(key, 0, strlen(key)-1))) {
+
+    if (search(symbols, key)) {
         free(value);
         return 0; /* existing symbol slreasy in symbols */
     }
@@ -201,12 +207,12 @@ int add_symbol(hash_table symbols, char *key, int count, int flag) {
     value->type[2] = 0;
     value->type[3] = 0;
     value->type[flag] = 1; /* turning on the right flag */
-    print_array(value->type, 4);
     value->count = count;
 
-    symbol = create_node(substring(key, 0, strlen(key)-1), value);
+    symbol = create_node(key, value);
     insert(symbols, symbol);
 
+    printf("symbol with key: %s inserted into table\n", key);
     return 1; /* success */
 }
 
@@ -235,8 +241,8 @@ void handle_data(char *arg, int *error) {
         number = strtol(token, NULL, 10);
         int_to_binary(number, &bin_num);
         data_image[DC] = bin_num;
-        DC++;
         token = strtok(NULL, COMMA_DELIM);
+        DC++;
     }
 }
 
@@ -377,13 +383,13 @@ void handle_extern(hash_table symbols, const char *arg, int *error) {
             *error = 13;
             return;
         }
-        if (!add_symbol(symbols, token, DC, 2)) {
-            *error = 18;
-            return;
-        }
         if (!check_symbol_name(token)) {
             printf("token is: %s\n", token);
             *error = 1;
+            return;
+        }
+        if (!add_symbol(symbols, token, 0, 2)) {
+            *error = 18;
             return;
         }
         token = strtok(NULL, COMMA_DELIM);
@@ -424,10 +430,10 @@ int is_opcode(char *word) {
     return linear_search(opcode_array, OPCODE_ARRAY_SIZE, word) != -1 ? 1 : 0;
 }
 
-void handle_opcode(char *opcode, const char *arg, int *error, hash_table symbols) {
+void handle_opcode(char *opcode, const char *arg, int *error) {
     short inst_word = 0;
     int index = linear_search(opcode_array, OPCODE_ARRAY_SIZE, opcode), token_count = 0, curr_addressing_method = 0, ic_holder = IC, source_or_dest = 0;
-    char copy[MAX_LINE], *token = NULL;
+    char copy[MAX_LINE], *token = NULL, reg_flag = 0;
 
     if (!check_comma(arg)) {
         *error = 12;
@@ -461,6 +467,7 @@ void handle_opcode(char *opcode, const char *arg, int *error, hash_table symbols
             return;
         }
 
+
         if (token_count == 1) {
             if (!is_all_zeros(opcode_array[index].legal_src, 4)) { /* this token should refer as a source operand token */
                 if (!check_opcode_operand_type(source_or_dest, index, curr_addressing_method, error)) return;
@@ -483,6 +490,7 @@ void handle_opcode(char *opcode, const char *arg, int *error, hash_table symbols
             return;
         }
 
+        /* HANDALING EACH OPERAND BY ITS ADDRESSING METHOD */
         /* insert into word in bits 10-7 source operand addressing, in 6-3 target operand addressing, in 2-0 the 'A', 'R', 'E' */
         if (curr_addressing_method == 0) { /* curr_addressing_method == 0 means its a number */
             code_image[IC] = get_number_from_operand(token) << 3;
@@ -492,10 +500,16 @@ void handle_opcode(char *opcode, const char *arg, int *error, hash_table symbols
             code_image[IC] = 0; /* probably a label that defined later in code */
         }
         else { /* curr_addressing_method == 2 or 3 means its a register */
-            if (source_or_dest) {
+            if (source_or_dest == 0) { /* meaning its a source register */
                 code_image[IC] = get_number_from_operand(token) << 6;
+                reg_flag = 1; /* maybe the target operand is a register, this would help us to check later (in the next token) */
             } else {
-                code_image[IC] = get_number_from_operand(token) << 3;
+                if (reg_flag) {
+                    IC--;
+                    code_image[IC] |= get_number_from_operand(token) << 3;
+                } else {
+                    code_image[IC] = get_number_from_operand(token) << 3;
+                }
             }
             set_bit_to_one(&code_image[IC], 2);
         }

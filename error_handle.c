@@ -21,6 +21,7 @@ const char *error_messages[] = {
     "one or more errors occur in first-pass, moving to next file", /* -- 17 -- */
     "existing symbol already in symbols", /* -- 18 -- */
     "symbol was not found in symbol table", /* -- 19 -- */
+    "label with both external and entry flags", /* -- 20 -- */
 };
 
 int empty_line(char *line){

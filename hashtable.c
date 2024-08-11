@@ -34,6 +34,26 @@ void *search(const hash_table source,const char *key) {
     return found != NULL ? get_value(found) : NULL;
 }
 
+void update_data_values(const hash_table table, const int IC) {
+    int i;
+    node curr;
+    struct symbol_value *val = NULL;
+    for (i = 0; i < HASH_TABLE_SIZE; i++) {
+        curr = table[i];
+        while (curr != NULL) {
+            val = (struct symbol_value *)get_value(curr);
+            if (val->type[0]) {
+                val->count += IC + 100;
+                printf("updated data symbol count %s to %d\n", get_key(curr), val->count);
+            } else if (val->type[1]) {
+                val->count += 100;
+                printf("updated code symbol count %s to %d\n", get_key(curr), val->count);
+            }
+            curr = get_next(curr);
+        }
+    }
+}
+
 void free_table(hash_table src, int flag) {
     int i;
     printf("--Freeing Table Memory--\n");
