@@ -34,7 +34,6 @@ int second_pass(char *am_file_name, hash_table symbols) {
         }
 
         if (!strcmp(word_buffer, ".extern")) {
-
             continue;
         }
 
