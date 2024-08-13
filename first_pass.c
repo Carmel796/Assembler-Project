@@ -33,7 +33,6 @@ int first_pass(const char *am_file_name, hash_table symbols, hash_table macros) 
 
 
     while (fgets(line, MAX_LINE, am_file)) {
-        printf("by\n");
         line_index++;
 
         /* new initials for each line */
@@ -553,7 +552,6 @@ int check_register_name(char *name) {
 
 int get_number_from_operand(char *token) {
     char *copy = token;
-    /*strcpy(copy, token);*/
 
     while (*copy != '#' && *copy != 'r') copy++;
     return atoi(copy+1);
