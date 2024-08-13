@@ -22,6 +22,9 @@ const char *error_messages[] = {
     "existing symbol already in symbols", /* -- 18 -- */
     "symbol was not found in symbol table", /* -- 19 -- */
     "label with both external and entry flags", /* -- 20 -- */
+    "detected a too-long line", /* -- 21 -- */
+    "failed to open .as / .asm file", /* -- 22 -- */
+    "already macro with the same name || macro name is one of the 16 opcodes", /* -- 23 -- */
 };
 
 int empty_line(char *line){
@@ -39,7 +42,7 @@ void print_error(int error_number, int line_number) {
     if (error_number < 0 || error_number >= sizeof(error_messages) / sizeof(error_messages[0])){
         printf("Unknown error at line %d\n", line_number);
     } else {
-        printf("Error at line %d: %s\n", line_number, error_messages[error_number]);
+        printf("\033[1;31mError at line %d: %s\033[0m\n", line_number, error_messages[error_number]);
     }
 }
 
@@ -55,8 +58,17 @@ int check_macr(char *line_after_macr, int line_count, hash_table macros) {
     }
 
     if (search(macros, macro_name) != NULL || is_opcode(macro_name)) {
-        printf("*already macro with the same name || macro name is one of the 16 opcodes\n");
+        print_error(23, -1);
         return 0;  /*already macro with the same name || macro name is one of the 16 opcodes*/
+    }
+    return 1;
+}
+
+int length_check(char *line, int max, int *error) {
+    size_t len = strlen(line);
+    if (len == MAX_LINE - 1 && line[len - 1] != '\n') {
+        *error = 21;
+        return 0;
     }
     return 1;
 }

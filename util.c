@@ -47,7 +47,7 @@ char *strdup(const char *s) {
 void *safe_malloc(size_t size) {
     void *mem = malloc(size);
     if (mem == NULL) {
-        perror("Error");
+        perror("\033[1;33mError\033[0m");
         exit(EXIT_FAILURE);
     }
     return mem;
@@ -60,7 +60,7 @@ char *substring(const char* source, int start, int end) {
 
     /* Check for valid indices */
     if (start < 0 || end > strlen(source) || start > end) {
-        printf("Invalid start or end indices.\n");
+        printf("\033[1;31mInvalid start or end indices of substring.\033[0m\n");
         return NULL;
     }
 
@@ -68,13 +68,8 @@ char *substring(const char* source, int start, int end) {
     length = end - start;
 
     /* Allocate memory for the substring */
-    substr = (char*)malloc((length + 1) * sizeof(char));
+    substr = (char*)safe_malloc((length + 1) * sizeof(char));
 
-    /* Ensure the memory allocation was successful */
-    if (substr == NULL) {
-        printf("Memory allocation failed.\n");
-        return NULL;
-    }
 
     /* Copy the substring */
     strncpy(substr, source + start, length);
@@ -88,10 +83,8 @@ char *substring(const char* source, int start, int end) {
 
 int alpha_and_numeric_only_string(char *word) {
     while (*word) {
-        if (!isalpha(*word) && !isdigit(*word) && !isspace(*word)) {
-            printf("the char %c is not alphabetic or numeric\n", *word);
+        if (!isalpha(*word) && !isdigit(*word) && !isspace(*word))
             return 0;
-        }
         word++;
     }
     return 1;

@@ -53,7 +53,6 @@ int second_pass(char *am_file_name, hash_table symbols) {
 
         else { /* opcode word */
             complete_opcode(line + total_offset, &error, symbols, &ext_flag, am_file_name);
-            printf("IC after line (%s) is: %d\n",substring(line, 0, strlen(line)-1), IC);
         }
 
         if (error) {
@@ -63,7 +62,8 @@ int second_pass(char *am_file_name, hash_table symbols) {
     }
 
 
-    printf("Printing Code-Image:\n");
+
+    fprintf(ob_file, "%d %d\n", IC + 1, DC + 1);
     for (i = 0; i <= IC; i++) {
         octal_str = print_only_5_octal(code_image[i]);
         fprintf(ob_file, "%04d %s\n", i+100, octal_str);
@@ -113,22 +113,18 @@ void complete_opcode(const char *arg, int *error, hash_table symbols, int *ext_f
         if (empty_line(curr_arg)) { /* stop or rts line*/
             break;
         }
-        printf("token is: %s\n", curr_arg);
 
         IC++; /* for each token */
 
         if (reg_flag && addressing_method >= 2) {
             IC--;
-            printf("decreased IC, IC = %d\n", IC);
         }
 
         if (addressing_method == 1) { /* token is label argument that need to be coded in code_image[IC] */
             value = search(symbols, curr_arg);
             if (value == NULL) {
-                printf("did not found symbol (%s) in table\n", curr_arg);
                 return;
             }
-            printf("assining into IC = %d\n", IC);
             code_image[IC] = value->count << 3; /* saving space for ARE */
             if (value->type[2] == 1) {
                 set_bit_to_one(&code_image[IC], 0); /* turning on external flag 'E' */

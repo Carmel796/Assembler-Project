@@ -28,14 +28,12 @@ struct instruction opcode_array[] = {
 
 int first_pass(const char *am_file_name, hash_table symbols, hash_table macros) {
     char line[MAX_LINE] = {0}, word_buffer[MAX_LINE] = {0}, symbol_name[MAX_SYMBOL_LENGTH] = {0}, opcode_temp[MAX_LINE] = {0};
-    int error_flag = 0, error = 0, symbol_flag = 0, offset = 0, total_offset = 0, line_index = -1, i;
+    int error_flag = 0, error = 0, symbol_flag = 0, offset = 0, total_offset = 0, line_index = -1;
     FILE *am_file = fopen_with_ending(am_file_name, ".am", "r");
 
 
     while (fgets(line, MAX_LINE, am_file)) {
-        printf("\n");
         line_index++;
-        printf("(line %d): %s", line_index, line);
 
         /* new initials for each line */
         symbol_name[0] = '\0';
@@ -53,7 +51,6 @@ int first_pass(const char *am_file_name, hash_table symbols, hash_table macros) 
 
         total_offset += offset;
 
-        /*printf("first word of line %d: %s\n", line_index, word_buffer);*/
 
         /* if label detected, and no error occur, symbol flag updating to True, symbol-name updating, and the "first_word" is now the second */
         if (is_label(word_buffer, &error, macros, symbols)) {
@@ -114,7 +111,6 @@ int first_pass(const char *am_file_name, hash_table symbols, hash_table macros) 
 
         if (is_opcode(word_buffer)) {
             if (symbol_flag) {
-                printf("adding symbol: %s to symbol table with value: %d\n", symbol_name, IC);
                 if (!add_symbol(symbols, symbol_name, IC, 1)) {
                     print_error(18, line_index);
                 }
@@ -140,17 +136,6 @@ int first_pass(const char *am_file_name, hash_table symbols, hash_table macros) 
     IC--; /* IC (/ DC) finish the first pass with the next empty memory place, we want the last used memory place */
     DC--;
 
-    printf("Printing Data-Image:\n");
-    for (i = 0; i <= DC; i++) {
-        printf("array[%d] = ", i);
-        print_binary(data_image[i]);
-    }
-
-    printf("Printing Code-Image:\n");
-    for (i = 0; i <= IC; i++) {
-        printf("array[%d] = ", i);
-        print_binary(code_image[i]);
-    }
     fclose(am_file);
 
     return !error_flag; /* error flag is 1 if in any point of the first pass an error occur, otherwise 0 */
@@ -212,7 +197,6 @@ int add_symbol(hash_table symbols, char *key, int count, int flag) {
     symbol = create_node(key, value);
     insert(symbols, symbol);
 
-    printf("symbol with key: %s inserted into table\n", key);
     return 1; /* success */
 }
 
@@ -374,7 +358,7 @@ void handle_extern(hash_table symbols, const char *arg, int *error) {
         return;
     }
 
-    strcpy(copy, arg);
+    sscanf(arg, "%s", copy);
     token = strtok(copy, COMMA_DELIM);
     while (isspace(*token)) token++;
     while (token != NULL) {
@@ -384,7 +368,6 @@ void handle_extern(hash_table symbols, const char *arg, int *error) {
             return;
         }
         if (!check_symbol_name(token)) {
-            printf("token is: %s\n", token);
             *error = 1;
             return;
         }
@@ -441,7 +424,6 @@ void handle_opcode(char *opcode, const char *arg, int *error) {
     }
 
     strcpy(copy, arg);
-    printf("in handle_opcode() function\n");
     if (index != -1) {
         inst_word = index << 11;
     } else {
@@ -535,7 +517,6 @@ int check_operand(char *token) {
     int i = 0;
     strcpy(copy, token);
 
-    printf("checking operand: %s\n", token);
     while (isspace(copy[i])) i++; /* increase token also outside of check_operand for skipping leading spaces */
 
     if (copy[i] == '#') {

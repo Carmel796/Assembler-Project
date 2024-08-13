@@ -44,10 +44,8 @@ void update_data_values(const hash_table table, const int IC) {
             val = (struct symbol_value *)get_value(curr);
             if (val->type[0]) {
                 val->count += IC + 100;
-                printf("updated data symbol count %s to %d\n", get_key(curr), val->count);
             } else if (val->type[1]) {
                 val->count += 100;
-                printf("updated code symbol count %s to %d\n", get_key(curr), val->count);
             }
             curr = get_next(curr);
         }
@@ -56,7 +54,7 @@ void update_data_values(const hash_table table, const int IC) {
 
 void free_table(hash_table src, int flag) {
     int i;
-    printf("--Freeing Table Memory--\n");
+    printf("\033[1;35m--Freeing Table Memory--\033[0m\n");
     for (i = 0; i < HASH_TABLE_SIZE; i++) {
         if (src[i] != NULL) {
             if (flag) {
