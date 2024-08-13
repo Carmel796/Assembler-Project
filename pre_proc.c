@@ -11,6 +11,7 @@ int macro_search(char *file_name, hash_table macros, int *main_error) { /* creat
         return 0;
     }
     while(fgets(line, MAX_LINE, as_file)) {
+        printf("hi\n");
         line_count++;
         if (!length_check(line, MAX_LINE, main_error)) return 0;
 

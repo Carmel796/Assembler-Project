@@ -33,6 +33,7 @@ int first_pass(const char *am_file_name, hash_table symbols, hash_table macros) 
 
 
     while (fgets(line, MAX_LINE, am_file)) {
+        printf("by\n");
         line_index++;
 
         /* new initials for each line */
@@ -65,6 +66,7 @@ int first_pass(const char *am_file_name, hash_table symbols, hash_table macros) 
             sscanf(line + total_offset, "%s%n", word_buffer, &offset);
             total_offset += offset;
         }
+
 
         if (!strcmp(word_buffer, ".data") || !strcmp(word_buffer, ".string")) {
             if (symbol_flag) {
@@ -116,6 +118,7 @@ int first_pass(const char *am_file_name, hash_table symbols, hash_table macros) 
                 }
             }
             strcpy(opcode_temp, word_buffer);
+
             word_buffer[0] = '\0'; /* reset word buffer */
             sscanf(line + total_offset, "%[^\n]", word_buffer);
             handle_opcode(opcode_temp, word_buffer, &error);
@@ -550,7 +553,7 @@ int check_register_name(char *name) {
 
 int get_number_from_operand(char *token) {
     char *copy = token;
-    strcpy(copy, token);
+    /*strcpy(copy, token);*/
 
     while (*copy != '#' && *copy != 'r') copy++;
     return atoi(copy+1);

@@ -1,0 +1,2 @@
+cmp r3,#-6
+bne END
