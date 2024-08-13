@@ -2,10 +2,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "Assembler.exe"
-		},
-		{
-			"path" : "Assembler.pdb"
+			"path" : "Assembler"
 		}
 	],
 	"backtrace" : 1,
@@ -38,7 +35,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-g -std=gnu90 -fdiagnostics-color=always"
+					"fragment" : "-g -std=gnu90 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -mmacosx-version-min=13.6 -fcolor-diagnostics"
 				}
 			],
 			"language" : "C",
@@ -75,16 +72,12 @@
 			{
 				"fragment" : "",
 				"role" : "flags"
-			},
-			{
-				"fragment" : "-lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32",
-				"role" : "libraries"
 			}
 		],
 		"language" : "C"
 	},
 	"name" : "Assembler",
-	"nameOnDisk" : "Assembler.exe",
+	"nameOnDisk" : "Assembler",
 	"paths" : 
 	{
 		"build" : ".",
