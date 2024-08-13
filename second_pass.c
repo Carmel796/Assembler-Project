@@ -3,7 +3,7 @@
 /* -- THIS IS SECOND PASS -- */
 int second_pass(char *am_file_name, hash_table symbols) {
     FILE *am_file = fopen_with_ending(am_file_name, ".am", "r"), *ob_file = fopen_with_ending(am_file_name, ".ob", "w"), *ent_file;
-    char line[MAX_LINE] = {0}, word_buffer[MAX_LINE] = {0}, *octal_str;
+    char line[MAX_LINE] = {0}, word_buffer[MAX_LINE] = {0}, *octal_str, *sub_holder;
     int error = 0, offset, total_offset, line_index = -1, i, ext_flag = 0, ent_flag = 0;
     struct symbol_value *temp = NULL;
     IC = -1;
@@ -23,10 +23,11 @@ int second_pass(char *am_file_name, hash_table symbols) {
 
         total_offset += offset;
 
-        if (search(symbols, substring(word_buffer, 0, offset-1))) { /* first word is label */
+        if (search(symbols, (sub_holder = substring(word_buffer, 0, offset-1)))) { /* first word is label */
             sscanf(line + total_offset, "%s%n", word_buffer, &offset);
             total_offset += offset;
         }
+        free(sub_holder);
 
         /* if got here: word_buffer should hold the first word of the line (after label if have) */
         if (!strcmp(word_buffer, ".data") || !strcmp(word_buffer, ".string")) {
@@ -58,7 +59,6 @@ int second_pass(char *am_file_name, hash_table symbols) {
         if (error) {
             print_error(error, line_index);
         }
-
     }
 
 

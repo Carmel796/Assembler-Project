@@ -48,10 +48,10 @@ void fprint_linked_list(FILE *output, node list) {
 }
 
 /* gets: node head and frees all subsequens node */
-void free_list(node head, void (*free_value)(void *), int flag) {
+void free_list(node head, void (*free_value)(void *)) {
     while (head != NULL) {
         node temp = head;
-        if (head->key && flag) {
+        if (head->key) {
             free(head->key);
         }
 
@@ -73,7 +73,7 @@ void free_list(node head, void (*free_value)(void *), int flag) {
 void free_nested_list(void *value) {
     node nested_head = (node)value;  /* Use appropriate type casting */
     if (nested_head != NULL) {
-        free_list(nested_head, NULL, 0);
+        free_list(nested_head, NULL);
     }
 }
 

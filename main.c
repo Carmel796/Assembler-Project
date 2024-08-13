@@ -4,7 +4,7 @@ int main(int argc, char *argv[]) {
     while(--argc > 0) {
         hash_table macros = {0}, symbols = {0};
         int error = 0;
-        printf(BOLDGREEN "start pre-preccesing, fetching macros\n" RESET);
+        printf(COLOR "start pre-preccesing, fetching macros\n" RESET);
 
         /* macro_search(FILE *as_file) - search for macro definition line-by-line, if found - adding them to the hashTable - add_to_hash(char *key, char *value) */
         if (!macro_search(argv[argc], macros, &error)) {
@@ -12,14 +12,14 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
-        printf(BOLDGREEN "starting first pass\n" RESET);
+        printf(COLOR "starting first pass\n" RESET);
         if (!first_pass(argv[argc], symbols, macros)) { /* if an error occur in first_pass, should move to next file */
             print_error(17, -1);
             continue;
         }
         
 
-        printf(BOLDGREEN "starting second pass\n" RESET);
+        printf(COLOR "starting second pass\n" RESET);
         if (!second_pass(argv[argc], symbols)) {
             print_error(18, -1);
             continue;
@@ -30,6 +30,6 @@ int main(int argc, char *argv[]) {
         free_table(symbols, 0);
     }
 
-    printf("Done\n");
+    printf(COLOR "Done\n" RESET);
     return 0;
 }

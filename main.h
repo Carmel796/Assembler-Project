@@ -9,7 +9,7 @@
 #include "second_pass.h"
 
 #define RESET   "\033[0m"
-#define BOLDGREEN   "\033[34m"
+#define COLOR   "\033[1;35m"
 
 
 #endif

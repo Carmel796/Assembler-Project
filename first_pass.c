@@ -28,6 +28,7 @@ struct instruction opcode_array[] = {
 
 int first_pass(const char *am_file_name, hash_table symbols, hash_table macros) {
     char line[MAX_LINE] = {0}, word_buffer[MAX_LINE] = {0}, symbol_name[MAX_SYMBOL_LENGTH] = {0}, opcode_temp[MAX_LINE] = {0};
+    char *sub_holder;
     int error_flag = 0, error = 0, symbol_flag = 0, offset = 0, total_offset = 0, line_index = -1;
     FILE *am_file = fopen_with_ending(am_file_name, ".am", "r");
 
@@ -61,7 +62,8 @@ int first_pass(const char *am_file_name, hash_table symbols, hash_table macros) 
             }
 
             symbol_flag = 1;
-            strcpy(symbol_name, substring(word_buffer, 0, offset-1));
+            strcpy(symbol_name, (sub_holder = substring(word_buffer, 0, offset-1)));
+            free(sub_holder);
             sscanf(line + total_offset, "%s%n", word_buffer, &offset);
             total_offset += offset;
         }
@@ -146,6 +148,7 @@ int first_pass(const char *am_file_name, hash_table symbols, hash_table macros) 
 /* HANDALING SYMBOL IN LINE */
 int is_label(char *name, int *error, hash_table macros, hash_table symbols) {
     int len = strlen(name);
+    char *sub_holder;
 
     /* does is even a symbol definition? */
     if (name[len-1] != ':') {
@@ -153,7 +156,8 @@ int is_label(char *name, int *error, hash_table macros, hash_table symbols) {
     }
 
     /* if here, detected an ':', now need to check if the symbol name is OK */
-    if (!check_symbol_name(substring(name, 0, len-1))) {
+    if (!check_symbol_name((sub_holder = substring(name, 0, len-1)))) {
+        free(sub_holder);
         *error = 1; /* 1: error in label name */
         return 1; /* symbol, but error detected in symbol-name */
     }
@@ -164,6 +168,7 @@ int is_label(char *name, int *error, hash_table macros, hash_table symbols) {
         return 1; /* symbol, but already exist in macro / symbol table */
     }
 
+    free(sub_holder);
     /* if got here, there is a symbol, with correct name, and no exiting macro / symbol with the same name */
     return 1;
 }
@@ -218,6 +223,10 @@ void handle_data(char *arg, int *error) {
     token = strtok(copy, COMMA_DELIM);
 
     while (token != NULL) {
+        if (IC + DC > 4096) {
+            print_error(25, -1);
+            exit(EXIT_FAILURE);
+        }
         /* Process token here */
         if (!check_data_num(token)) {
             *error = 9;
@@ -294,6 +303,10 @@ void handle_string(char *str, int *error) {
     strcpy(copy, str);
 
     for (;start <= end; start++) {
+        if (IC + DC > 4096) {
+            print_error(25, -1);
+            exit(EXIT_FAILURE);
+        }
         data_image[DC] = copy[start];
         DC++;
     }
@@ -449,6 +462,11 @@ void handle_opcode(char *opcode, const char *arg, int *error) {
         if (curr_addressing_method == -1) {
             *error = 14;
             return;
+        }
+
+        if (IC + DC > 4096) {
+            print_error(25, -1);
+            exit(EXIT_FAILURE);
         }
 
 

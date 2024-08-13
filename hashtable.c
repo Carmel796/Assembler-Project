@@ -54,13 +54,12 @@ void update_data_values(const hash_table table, const int IC) {
 
 void free_table(hash_table src, int flag) {
     int i;
-    printf("\033[1;35m--Freeing Table Memory--\033[0m\n");
     for (i = 0; i < HASH_TABLE_SIZE; i++) {
         if (src[i] != NULL) {
             if (flag) {
-                free_list(src[i], free_nested_list, 1); /* 1: free key */
+                free_list(src[i], free_nested_list); /* 1: free key */
             } else {
-                free_list(src[i], NULL, 0);
+                free_list(src[i], NULL); /* key is always added with strdup, and we need to change it as long its not null */
             }
         }
     }
