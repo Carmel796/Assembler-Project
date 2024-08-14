@@ -13,7 +13,7 @@ int macro_search(char *file_name, hash_table macros, int *main_error) { /* creat
     while(fgets(line, MAX_LINE, as_file)) {
         line_count++;
         if (!length_check(line, main_error)) return 0;
-
+        remove_leading_whitespace(line);
         if (sscanf(line, "%s%n", word, &offset) == 1) {
             if (!strcmp(word, "endmacr")) {
                 macro_flag = 0;
@@ -64,6 +64,18 @@ char *get_macro_name(char *line_after_macr){
 void handle_macro(node *curr_line, char *line) {
     insert_node(line, NULL, curr_line);
     *curr_line = get_next(*curr_line);
+}
+
+void remove_leading_whitespace(char *line) {
+    char *start = line;
+
+    while (isspace((unsigned char)*start)) {
+        start++;
+    }
+
+    if (start != line) {
+        memmove(line, start, strlen(start) + 1);
+    }
 }
 
 

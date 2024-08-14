@@ -12,5 +12,6 @@
 int macro_search(char *file_name, hash_table macros, int *main_error);
 char *get_macro_name(char *line_after_macr);
 void handle_macro(node *curr_line, char *line);
+void remove_leading_whitespace(char *line);
 
 #endif

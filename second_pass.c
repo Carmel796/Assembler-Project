@@ -17,8 +17,6 @@ int second_pass(char *am_file_name, hash_table symbols) {
         line_index++;
         temp = NULL;
 
-        while (isspace(line[offset])) offset++;
-        total_offset += offset;
         if (!sscanf(line + offset, "%s%n", word_buffer, &offset))
             continue;
 
