@@ -58,6 +58,7 @@ char *substring(const char* source, int start, int end) {
     int length;
     char *substr;
 
+    printf("string = %s, offset - 1 == %d\n", source, end);
     /* Check for valid indices */
     if (start < 0 || end > strlen(source) || start > end) {
         printf("\033[1;31mInvalid start or end indices of substring.\033[0m\n");

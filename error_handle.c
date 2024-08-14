@@ -25,6 +25,8 @@ const char *error_messages[] = {
     "detected a too-long line", /* -- 21 -- */
     "failed to open .as / .asm file", /* -- 22 -- */
     "already macro with the same name || macro name is one of the 16 opcodes", /* -- 23 -- */
+    "memory is over", /* -- 24 -- */
+    "could not pre procced the as_file, moving to next file", /* -- 25 -- */
 };
 
 int empty_line(char *line){
@@ -64,7 +66,7 @@ int check_macr(char *line_after_macr, int line_count, hash_table macros) {
     return 1;
 }
 
-int length_check(char *line, int max, int *error) {
+int length_check(char *line, int *error) {
     size_t len = strlen(line);
     if (len == MAX_LINE - 1 && line[len - 1] != '\n') {
         *error = 21;

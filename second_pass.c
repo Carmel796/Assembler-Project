@@ -17,11 +17,13 @@ int second_pass(char *am_file_name, hash_table symbols) {
         line_index++;
         temp = NULL;
 
-
-        if (!sscanf(line, "%s%n", word_buffer, &offset))
+        while (isspace(line[offset])) offset++;
+        total_offset += offset;
+        if (!sscanf(line + offset, "%s%n", word_buffer, &offset))
             continue;
 
         total_offset += offset;
+
 
         if (search(symbols, (sub_holder = substring(word_buffer, 0, offset-1)))) { /* first word is label */
             sscanf(line + total_offset, "%s%n", word_buffer, &offset);

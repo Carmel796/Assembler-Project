@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
 
         /* macro_search(FILE *as_file) - search for macro definition line-by-line, if found - adding them to the hashTable - add_to_hash(char *key, char *value) */
         if (!macro_search(argv[argc], macros, &error)) {
-            print_error(error, -1);
+            error == 0 ? print_error(25, -1) : print_error(error, -1);
             continue;
         }
 

@@ -7,12 +7,12 @@ int macro_search(char *file_name, hash_table macros, int *main_error) { /* creat
     int offset = 0, macro_flag = 0, line_count = -1;
     FILE *am_file = fopen_with_ending(file_name, ".am", "w");
     if (as_file == NULL || am_file == NULL) {
-        *main_error = 22;
+        print_error(22, 0);
         return 0;
     }
     while(fgets(line, MAX_LINE, as_file)) {
         line_count++;
-        if (!length_check(line, MAX_LINE, main_error)) return 0;
+        if (!length_check(line, main_error)) return 0;
 
         if (sscanf(line, "%s%n", word, &offset) == 1) {
             if (!strcmp(word, "endmacr")) {

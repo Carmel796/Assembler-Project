@@ -224,7 +224,7 @@ void handle_data(char *arg, int *error) {
 
     while (token != NULL) {
         if (IC + DC > 4096) {
-            print_error(25, -1);
+            print_error(24, -1);
             exit(EXIT_FAILURE);
         }
         /* Process token here */
@@ -304,7 +304,7 @@ void handle_string(char *str, int *error) {
 
     for (;start <= end; start++) {
         if (IC + DC > 4096) {
-            print_error(25, -1);
+            print_error(24, -1);
             exit(EXIT_FAILURE);
         }
         data_image[DC] = copy[start];
@@ -465,7 +465,7 @@ void handle_opcode(char *opcode, const char *arg, int *error) {
         }
 
         if (IC + DC > 4096) {
-            print_error(25, -1);
+            print_error(24, -1);
             exit(EXIT_FAILURE);
         }
 
