@@ -499,10 +499,6 @@ void handle_opcode(char *opcode, const char *arg, int *error) {
             set_bit_to_one(&code_image[IC], 2);
         }
         else if (curr_addressing_method == 1) {
-            if (is_opcode(token)){
-                *error = 26;
-                return;
-            }
             code_image[IC] = 0; /* probably a label that defined later in code */
         }
         else { /* curr_addressing_method == 2 or 3 means its a register */
