@@ -29,7 +29,7 @@ struct instruction opcode_array[] = {
 int first_pass(const char *am_file_name, hash_table symbols, hash_table macros) {
     char line[MAX_LINE] = {0}, word_buffer[MAX_LINE] = {0}, symbol_name[MAX_SYMBOL_LENGTH] = {0}, opcode_temp[MAX_LINE] = {0};
     char *sub_holder;
-    int error_flag = 0, error = 0, symbol_flag = 0, offset = 0, total_offset = 0, line_index = -1;
+    int error_flag = 0, error = 0, symbol_flag = 0, offset = 0, total_offset = 0, line_index = 0;
     FILE *am_file = fopen_with_ending(am_file_name, ".am", "r");
 
 

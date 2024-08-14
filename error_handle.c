@@ -27,6 +27,7 @@ const char *error_messages[] = {
     "already macro with the same name || macro name is one of the 16 opcodes", /* -- 23 -- */
     "memory is over", /* -- 24 -- */
     "could not pre procced the as_file, moving to next file", /* -- 25 -- */
+    "macro name is 'macr' or 'endmacr'", /* -- 26 -- */
 };
 
 int empty_line(char *line){
@@ -62,6 +63,11 @@ int check_macr(char *line_after_macr, int line_count, hash_table macros) {
     if (search(macros, macro_name) != NULL || is_opcode(macro_name)) {
         print_error(23, -1);
         return 0;  /*already macro with the same name || macro name is one of the 16 opcodes*/
+    }
+
+    if (!strcmp(macro_name, "macr") || !strcmp(macro_name, "endmacr")) {
+        print_error(26, -1);
+        return 0;
     }
     return 1;
 }
