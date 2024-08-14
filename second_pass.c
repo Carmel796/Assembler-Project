@@ -123,6 +123,7 @@ void complete_opcode(const char *arg, int *error, hash_table symbols, int *ext_f
         if (addressing_method == 1) { /* token is label argument that need to be coded in code_image[IC] */
             value = search(symbols, curr_arg);
             if (value == NULL) {
+                *error = 19;
                 return;
             }
             code_image[IC] = value->count << 3; /* saving space for ARE */
