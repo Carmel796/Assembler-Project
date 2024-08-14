@@ -1,4 +1,4 @@
-#include "error_handle.h"
+#include "../Headers/error_handle.h"
 
 const char *error_messages[] = {
     "No error",    /* 0 - No error */
@@ -61,21 +61,20 @@ int check_macr(char *line_after_macr, int line_count, hash_table macros) {
     }
 
     if (search(macros, macro_name) != NULL || is_opcode(macro_name)) {
-        print_error(23, -1);
+        print_error(23, line_count);
         return 0;  /*already macro with the same name || macro name is one of the 16 opcodes*/
     }
 
     if (!strcmp(macro_name, "macr") || !strcmp(macro_name, "endmacr")) {
-        print_error(26, -1);
+        print_error(26, line_count);
         return 0;
     }
     return 1;
 }
 
-int length_check(char *line, int *error) {
+int length_check(char *line) {
     size_t len = strlen(line);
     if (len == MAX_LINE - 1 && line[len - 1] != '\n') {
-        *error = 21;
         return 0;
     }
     return 1;

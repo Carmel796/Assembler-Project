@@ -9,7 +9,8 @@
 #include "second_pass.h"
 
 #define RESET   "\033[0m"
-#define COLOR   "\033[1;35m"
+#define PINK_COLOR "\033[1;35m"
+#define BLUE_COLOR   "\033[0;34m"
 
 
 #endif

@@ -1,4 +1,4 @@
-#include "second_pass.h"
+#include "../Headers/second_pass.h"
 
 /* -- THIS IS SECOND PASS -- */
 int second_pass(char *am_file_name, hash_table symbols) {

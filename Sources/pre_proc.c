@@ -1,26 +1,40 @@
-#include "pre_proc.h"
+#include "../Headers/pre_proc.h"
 
-int macro_search(char *file_name, hash_table macros, int *main_error) { /* creating new .as file, every line thats not macro decleration or body - add to new file */
+void macro_search(char *file_name, hash_table macros, int *main_error) { /* creating new .as file, every line thats not macro decleration or body - add to new file */
     node curr_line = NULL, curr_macro = NULL, curr_value = NULL;
     FILE *as_file = fopen_with_ending(file_name, ".as", "r");
-    char line[MAX_LINE] = {0}, word[MAX_LINE] = {0};
-    int offset = 0, macro_flag = 0, line_count = -1;
+    char line[MAX_LINE] = {0}, word[MAX_LINE] = {0}, *am_file_name_holder = create_file_name_with_ending(file_name, ".am");
+    int offset = 0, macro_flag = 0, macro_error = 0, line_count = 0;
     FILE *am_file = fopen_with_ending(file_name, ".am", "w");
     if (as_file == NULL || am_file == NULL) {
+        *main_error = 1;
         print_error(22, 0);
-        return 0;
+        fclose(am_file);
+        if (remove(am_file_name_holder) == 0) {
+            printf(".am file removed due to errors.\n");
+        } else {
+            perror("Error removing .am file");
+        }
+        return;
     }
     while(fgets(line, MAX_LINE, as_file)) {
         line_count++;
-        if (!length_check(line, main_error)) return 0;
+        if (!length_check(line)) {
+            *main_error = 1;
+            print_error(21, line_count);
+            continue;
+        }
         remove_leading_whitespace(line);
         if (sscanf(line, "%s%n", word, &offset) == 1) {
             if (!strcmp(word, "endmacr")) {
-                macro_flag = 0;
-                if (!empty_line(line + offset)) { /* another word in "endmacr" line */
+                if (!empty_line(line + offset) || macro_error || !macro_flag) { /* another word in "endmacr" line || macr line had an issue */
+                    *main_error = 1;
+                    macro_error = 0;
+                    macro_flag = 0;
                     print_error(6, line_count);
-                    return 0;
+                    continue;
                 }
+                macro_flag = 0;
                 insert(macros, curr_macro);
                 curr_line = NULL;
                 curr_value = NULL;
@@ -31,28 +45,37 @@ int macro_search(char *file_name, hash_table macros, int *main_error) { /* creat
             }
             else if (!strcmp(word, "macr")) { /* not allowed macro inside a macro definitaon so this approch will work */
                 if (!check_macr(line + offset, line_count, macros)) {
-                    return 0;
+                    *main_error = 1;
+                    macro_error = 1;
+                    continue;
                 }
                 macro_flag = 1;
                 insert_node(get_macro_name(line + offset), (curr_line = create_node("", NULL)), &curr_macro);
             }
             else if ((curr_value = search(macros, word))) {
                 if (!empty_line(line + offset)) { /* macro call line has more chars after than the macro-call */
+                    *main_error = 1;
                     print_error(7, line_count);
-                    return 0;
+                    continue;
                 }
                 fprint_linked_list(am_file, curr_value);
             }
-            else {
-                if (*word != ';')
-                    fprintf(am_file, "%s", line);
-            }
+            else if (*word != ';')
+                fprintf(am_file, "%s", line);
         }
     }
 
     fclose(as_file);
     fclose(am_file);
-    return 1; /* success*/
+    if (*main_error) {
+        if (remove(am_file_name_holder) == 0) {
+            printf(".am file removed due to errors.\n");
+        } else {
+            perror("Error removing .am file");
+        }
+    }
+    free(am_file_name_holder);
+
 }
 
 char *get_macro_name(char *line_after_macr){

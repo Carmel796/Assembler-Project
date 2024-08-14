@@ -1,6 +1,6 @@
-#include "hashtable.h"
+#include "../Headers/hashtable.h"
 
-#include "first_pass.h"
+#include "../Headers/first_pass.h"
 
 /* djb2 */
 unsigned long hash(const unsigned char *str) {

@@ -1,4 +1,4 @@
-#include "first_pass.h"
+#include "../Headers/first_pass.h"
 
 int DC = 0;
 int IC = 0;

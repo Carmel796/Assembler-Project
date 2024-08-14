@@ -1,2 +1,0 @@
-TODO:
-1. (first_pass.c) add remain part of line (arg) into handle_opcode

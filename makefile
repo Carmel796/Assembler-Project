@@ -1,8 +1,8 @@
 # Compiler and flags
 FLAGS := gcc -ansi -pedantic -Wall -g
 OFLAGS = -c -o $@
-CFILES := $(wildcard ./*.c)
-OFILES := $(patsubst %.c, %.o, $(CFILES))
+CFILES := $(wildcard Sources/*.c)
+OFILES := $(patsubst Sources/%.c, %.o, $(CFILES))
 
 # Detect OS
 ifeq ($(OS),Windows_NT)
@@ -17,13 +17,13 @@ endif
 all: $(OFILES)
 	$(FLAGS) $^ -o assembler
 
-%.o: %.c %.h
+%.o: Sources/%.c Headers/%.h
 	$(FLAGS) $< $(OFLAGS)
 
 .PHONY: clean val
 
 clean:
-	$(DEL) *.o
+	$(DEL) *.o assembler
 
 val:
 	valgrind --leak-check=full --track-origins=yes --show-leak-kinds=all ./assembler file1

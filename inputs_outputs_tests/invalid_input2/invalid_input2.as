@@ -1,4 +1,5 @@
-f: 
+f:
+    ; check operand kind
     cmp #5, r1
     cmp #5
     cmp
@@ -29,6 +30,9 @@ f:
     prn r4
     prn
     prn r6, *r6
+
+    ; check of known identifiers
     cmp fg, a
     cmp ad, f
     cmp f, ad
+
