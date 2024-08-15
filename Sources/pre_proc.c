@@ -12,6 +12,7 @@ void macro_search(char *file_name, hash_table macros, int *main_error) { /* crea
         fclose(am_file);
         if (remove(am_file_name_holder) == 0) {
             printf(".am file removed due to errors.\n");
+            free(am_file_name_holder);
         } else {
             perror("Error removing .am file");
         }
