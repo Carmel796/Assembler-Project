@@ -28,6 +28,7 @@ const char *error_messages[] = {
     "memory is over", /* -- 24 -- */
     "could not pre procced the as_file, moving to next file", /* -- 25 -- */
     "macro name is 'macr' or 'endmacr'", /* -- 26 -- */
+    "macro name is instruction word", /* -- 27 -- */
 };
 
 int empty_line(char *line){
@@ -63,6 +64,11 @@ int check_macr(char *line_after_macr, int line_count, hash_table macros) {
     if (search(macros, macro_name) != NULL || is_opcode(macro_name)) {
         print_error(23, line_count);
         return 0;  /*already macro with the same name || macro name is one of the 16 opcodes*/
+    }
+
+    if (!strcmp(macro_name, ".entry") || !strcmp(macro_name, ".entry") || !strcmp(macro_name, ".entry") || !strcmp(macro_name, ".entry")) {
+        print_error(27, line_count);
+        return 0;
     }
 
     if (!strcmp(macro_name, "macr") || !strcmp(macro_name, "endmacr")) {
